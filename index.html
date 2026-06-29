@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>士業AI特典エージェント 題材リサーチ</title>
+<style>
+  :root{
+    --bg:#f7f6f2; --card:#fff; --ink:#23231f; --muted:#67665f; --line:#e6e3da;
+    --navy:#1a2e4a; --navy-bg:#e8edf5;
+    --gold:#a07b1c; --gold-bg:#faf0d7;
+    --pain:#a32d2d; --pain-bg:#faeaea;
+    --no1:#185fa5; --no1-bg:#e6f1fb;
+    --no2:#0f6e56; --no2-bg:#e1f5ee;
+    --no3:#534ab7; --no3-bg:#eeedfe;
+    --no4:#854f0b; --no4-bg:#faeeda;
+    --no5:#5f5e5a; --no5-bg:#f1efe8;
+    --red:#a32d2d;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);line-height:1.75;
+    font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:960px;margin:0 auto;padding:0 22px 100px;}
+  .secret{background:var(--red);color:#fff;text-align:center;font-size:13px;font-weight:700;padding:9px;position:sticky;top:0;z-index:10;}
+  header{padding:42px 0 6px;}
+  .eyebrow{color:var(--gold);font-weight:700;font-size:12px;letter-spacing:2px;text-transform:uppercase;}
+  h1{font-size:28px;font-weight:700;margin-top:4px;}
+  .lead{color:var(--muted);font-size:15px;margin-top:10px;}
+  .toc{background:var(--navy-bg);border-radius:12px;padding:14px 18px;margin-top:18px;font-size:13.5px;color:var(--navy);}
+  .toc b{color:var(--ink);}
+
+  h2{font-size:21px;font-weight:700;margin:52px 0 8px;padding-top:10px;border-top:2px solid var(--navy);color:var(--navy);}
+  h3{font-size:16px;font-weight:700;margin:16px 0 6px;}
+  .note{color:var(--muted);font-size:13.5px;margin:4px 0 8px;}
+
+  .pain-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px;}
+  .pain{background:var(--pain-bg);border-left:4px solid var(--pain);border-radius:0 12px 12px 0;padding:14px 18px;}
+  .pain b{color:var(--pain);font-size:15px;}
+  .pain .stat{display:inline-block;background:#fff;color:var(--pain);font-weight:700;font-size:13px;padding:3px 10px;border-radius:8px;margin:6px 6px 0 0;border:1px solid #f1c5c5;}
+  .pain p{margin-top:6px;font-size:14px;}
+
+  .rank{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-top:14px;box-shadow:0 1px 0 rgba(0,0,0,.02);}
+  .rank.no1{border-left:6px solid var(--no1);}
+  .rank.no2{border-left:6px solid var(--no2);}
+  .rank.no3{border-left:6px solid var(--no3);}
+  .rank.no4{border-left:6px solid var(--no4);}
+  .rank.no5{border-left:6px solid var(--no5);}
+  .rank .head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .badge{display:inline-block;color:#fff;font-weight:700;font-size:12px;padding:4px 10px;border-radius:8px;}
+  .badge.no1{background:var(--no1);}
+  .badge.no2{background:var(--no2);}
+  .badge.no3{background:var(--no3);}
+  .badge.no4{background:var(--no4);}
+  .badge.no5{background:var(--no5);}
+  .rank h3{margin:0;font-size:17px;}
+  .strength{display:inline-block;font-size:12px;font-weight:700;padding:3px 9px;border-radius:7px;background:var(--gold-bg);color:var(--gold);margin-left:auto;}
+  .rank dl{margin-top:10px;display:grid;grid-template-columns:90px 1fr;gap:4px 14px;font-size:14px;}
+  .rank dt{color:var(--muted);font-weight:700;font-size:12.5px;padding-top:2px;}
+  .rank dd{margin:0;}
+  .rank .why{margin-top:10px;background:var(--navy-bg);border-radius:9px;padding:10px 14px;font-size:14px;}
+  .rank .why b{color:var(--navy);}
+
+  ul{margin:6px 0 0 4px;padding-left:22px;}
+  li{font-size:14px;margin:5px 0;}
+
+  .caveat{background:var(--gold-bg);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;padding:12px 16px;margin-top:10px;font-size:13.5px;color:#5b3f07;}
+  .caveat b{color:var(--gold);}
+
+  .src{font-size:12.5px;color:var(--muted);margin-top:8px;}
+  .src a{color:var(--navy);word-break:break-all;}
+
+  footer{margin-top:50px;border-top:1px solid var(--line);padding-top:14px;color:var(--muted);font-size:12.5px;}
+</style>
+</head>
+<body>
+<div class="secret">社外秘 — GIFT営業企画・特典エージェント設計用。社内と信頼できる相手だけに。</div>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">DEEP RESEARCH REPORT</div>
+    <h1>士業AI特典エージェント 題材リサーチ</h1>
+    <div class="lead">フォーム営業のフックとして「これを受け取るために60分商談に行く」と士業事務所長が思う特典AIエージェントの題材を、現場ペインから逆算する。対象＝税理士・社労士・公認会計士、1〜20名規模を主軸。</div>
+    <div class="toc"><b>目次：</b>① リサーチの問い ／ ② 士業事務所の主要ペイン5つ ／ ③ 特典エージェント題材 ランキング5本 ／ ④ 留保と未調査の論点 ／ ⑤ 主な出典</div>
+  </header>
+
+  <h2>① リサーチの問い</h2>
+  <p style="font-size:14.5px;">「フォーム営業で士業事務所に資料を送ったとき、所長が60分の商談に行ってでも受け取りたいと思う特典AIエージェントは何か」を、現場ペインの一次資料から逆算して答える。10論点（繁忙期／顧問先対応／新規受任／法改正／採用／DX／補助金／業種別／制度変化）を網羅した上で、題材を3〜5本ランク付け。</p>
+
+  <h2>② 士業事務所の主要ペイン（5つ）</h2>
+  <div class="note">5つは互いに強化し合い、特に中小事務所では分業が効かないため所長1人に負荷が集中する。</div>
+
+  <div class="pain-grid">
+    <div class="pain">
+      <b>1. 構造的繁忙期（11月〜翌5月の約7ヶ月）</b>
+      <div>
+        <span class="stat">残業 月50〜60h（一般企業の3〜4倍）</span>
+        <span class="stat">業界の23.3%が月80h超</span>
+        <span class="stat">1人で30〜100顧問先</span>
+      </div>
+      <p>年末調整→確定申告→3月決算法人申告の法定スケジュールに縛られて短縮不能。中小は分業できず所長個人の負荷が大手より大きい。</p>
+    </div>
+
+    <div class="pain">
+      <b>2. インボイス・電帳法による顧問先質問の爆増</b>
+      <div>
+        <span class="stat">中小企業の82.2%が事務負担増を実感</span>
+        <span class="stat">48.8%がコスト増</span>
+      </div>
+      <p>「これって経費？」「電帳法、うちはどこまで？」「インボイス番号確認した方がいい？」が顧問税理士に集中。所長の時間を最も奪う反復質問のトップ。</p>
+    </div>
+
+    <div class="pain">
+      <b>3. 採用難と高齢化</b>
+      <div>
+        <span class="stat">税理士 有効求人倍率 2.31倍（全産業の約1.85倍）</span>
+        <span class="stat">60歳以上が 53.6%</span>
+        <span class="stat">開業税理士の 71%</span>
+        <span class="stat">受験者 17年→20年で 52%減</span>
+      </div>
+      <p>人を増やせない・若手が辞める・後継がいない、の三重苦。AIによる省人化・新人育成代替・所長自身の代替への関心が高い。</p>
+    </div>
+
+    <div class="pain">
+      <b>4. 紙・FAX依存とDX遅延（二重構造）</b>
+      <div>
+        <span class="stat">顧問先がクラウド非対応</span>
+        <span class="stat">事務所内にIT専任を置けない</span>
+      </div>
+      <p>「DX化したいが時間がない・顧問先が紙のまま」が典型構造。「顧問先側にツールを覚えさせない／自然言語で代行する」設計のAIが刺さる。</p>
+    </div>
+
+    <div class="pain">
+      <b>5. 補助金提案を顧問業務として要求される傾向</b>
+      <div>
+        <span class="stat">建設だけで主要10種</span>
+        <span class="stat">IT導入 最大450万</span>
+        <span class="stat">ものづくり 最大3,000万</span>
+        <span class="stat">省力化 最大1億</span>
+      </div>
+      <p>提案できれば差別化・できなければ離反。本業の合間でキャッチアップしきれない領域＝AIで瞬時にレコメンドできれば価値が大きい。</p>
+    </div>
+  </div>
+
+  <h2>③ 特典エージェント題材 ランキング5本</h2>
+  <div class="note">「フォーム営業で配ったときの60分商談誘導効果」で順位付け。1〜3位はペインの数字で強く裏付けられた本命。4〜5位は経営課題に効くがエビデンスは中位。</div>
+
+  <div class="rank no1">
+    <div class="head">
+      <span class="badge no1">1位</span>
+      <h3>顧問先からの即答質問オートレスポンダー</h3>
+      <span class="strength">動機強度：最強</span>
+    </div>
+    <dl>
+      <dt>入力</dt><dd>顧問先からのメール／LINE／チャット原文（例「この交際費って経費？」「電帳法どこまで？」「インボイス番号確認すべき？」）</dd>
+      <dt>出力</dt><dd>① 事務所トーン＆過去回答スタイルの返信下書き ② 根拠条文 ③ 判断のグレー度合い ④ 所長エスカレーション要否の自動判定</dd>
+    </dl>
+    <div class="why">
+      <b>なぜ刺さるか：</b>インボイス導入後 82.2% の顧問先が事務負担増を実感、その問い合わせは全部税理士に来る。所長が「あとで答える」と溜め込むメールこそ最大の時間泥棒。<br>
+      <b>60分商談動機：</b>「繁忙期の問い合わせ対応を月20時間減らせる試算をその場で出します」と言えるため、商談コストを十分に上回る即時的リターンを提示できる。
+    </div>
+  </div>
+
+  <div class="rank no2">
+    <div class="head">
+      <span class="badge no2">2位</span>
+      <h3>顧問先業種別 補助金・助成金 月次自動レコメンドBot</h3>
+      <span class="strength">動機強度：強</span>
+    </div>
+    <dl>
+      <dt>入力</dt><dd>顧問先リスト（業種・従業員数・売上規模・直近の設備投資／採用計画）</dd>
+      <dt>出力</dt><dd>各顧問先に対して月初に「今月使える補助金トップ3＋採択率＋締切＋必要書類＋初動メール下書き」を自動配信</dd>
+    </dl>
+    <div class="why">
+      <b>なぜ刺さるか：</b>補助金は本業合間のキャッチアップが追いつかないが、顧問先からは提案を期待される。建設だけで10種・業種横断で常時数十種が走っている。<br>
+      <b>60分商談動機：</b>「これがあれば顧問料upを正当化できる／顧問先離反を防げる」と収益直結ロジックで動機付け可能。
+    </div>
+  </div>
+
+  <div class="rank no3">
+    <div class="head">
+      <span class="badge no3">3位</span>
+      <h3>法改正キャッチアップ＆顧問先別インパクト解説書ジェネレーター</h3>
+      <span class="strength">動機強度：強</span>
+    </div>
+    <dl>
+      <dt>入力</dt><dd>顧問先の属性（個人／法人、業種、給与水準、扶養家族、消費税課税方式）</dd>
+      <dt>出力</dt><dd>直近改正（インボイス／電帳法／新NISA／社保改正／定額減税／年収の壁）について「この顧問先にどう影響するか／何をいつまでに／所長として何を案内すべきか」のA4 1枚解説書</dd>
+    </dl>
+    <div class="why">
+      <b>なぜ刺さるか：</b>改正のたびに「全顧問先向け案内文」を所長が深夜に手書きしている現状を完全代替。<br>
+      <b>60分商談動機：</b>「毎回の改正対応で所長の徹夜が消える」という体感的ペインに直結。
+    </div>
+  </div>
+
+  <div class="rank no4">
+    <div class="head">
+      <span class="badge no4">4位</span>
+      <h3>新規受任プロセス自動化エージェント（面談→カルテ→見積→契約書）</h3>
+      <span class="strength">動機強度：中〜強</span>
+    </div>
+    <dl>
+      <dt>入力</dt><dd>問い合わせフォーム情報＋初回ヒアリングのzoom録音</dd>
+      <dt>出力</dt><dd>① 顧問先カルテ ② 顧問料見積（業界相場×規模×業務範囲） ③ 契約書ドラフト ④ 初回提案資料（補助金／節税スキーム3本付き）</dd>
+    </dl>
+    <div class="why">
+      <b>なぜ刺さるか：</b>新規受任は所長自身が動かざるを得ないが繁忙期は完全に止まる＝機会損失。<br>
+      <b>60分商談動機：</b>「新規獲得を所長が動かずに進められる」は売上直結のため動機強度は大きいが、効果実感に時間差あり。
+    </div>
+  </div>
+
+  <div class="rank no5">
+    <div class="head">
+      <span class="badge no5">5位</span>
+      <h3>新人OJT＆判断トレーニングAIメンター</h3>
+      <span class="strength">動機強度：中〜強</span>
+    </div>
+    <dl>
+      <dt>入力</dt><dd>新人スタッフが入力した仕訳・申告書・顧問先返信ドラフト</dd>
+      <dt>出力</dt><dd>① 所長スタイルでの添削＋根拠条文 ② 誤りパターン照合 ③ 次に学ぶべきテーマ ④ 所長への週次レポート（誰がどこで詰まっているか）</dd>
+    </dl>
+    <div class="why">
+      <b>なぜ刺さるか：</b>採用難（求人倍率2.31倍）・若手の早期離職・所長が育成に割く時間がない、の三重苦の解決策。<br>
+      <b>60分商談動機：</b>「所長が育成から解放される＋若手定着率up」は採用コスト削減と人材確保の両方に効くが、効果実感には時間がかかる。
+    </div>
+  </div>
+
+  <h2>④ 留保と未調査の論点</h2>
+  <div class="caveat">
+    <b>留保（このレポートの限界）</b>
+    <ul>
+      <li>証拠の中心は税理士。社労士・公認会計士固有のペインは類推で広げているため、別業種向けには追加チューニングが必要。</li>
+      <li>「60分商談動機」は検証済みペインからの論理的推測であり、フォーム営業のA/Bテスト実測ではない。</li>
+      <li>「事務所トーンでの返信」品質は顧問先個別データ学習が前提のため、フォーム営業の汎用デモと実導入版にはギャップが出る。</li>
+      <li>補助金額・採択率・有効求人倍率などの数字は年度ごとに変動する。実装時は最新値の自動取得設計が必須。</li>
+    </ul>
+  </div>
+  <div class="caveat">
+    <b>次に詰めたい論点</b>
+    <ul>
+      <li>社労士事務所固有ペイン（給与計算・社保手続き・36協定・就業規則）の所長時間泥棒ランキング。</li>
+      <li>顧問先業種別（建設・不動産・医療・小売・飲食）の即答質問トップ10。業種特化版 vs 業種横断版、どちらが刺さるか。</li>
+      <li>所長の「顧問先データをAIに渡すこと」へのコンプライアンス抵抗レベル。汎用デモ版で「顧問先データ不要」の設計の方が刺さる可能性。</li>
+      <li>士業向けマーケで「AIを特典として配ったときの返信率・商談化率」のA/Bテストデータ。</li>
+    </ul>
+  </div>
+
+  <h2>⑤ 主な出典</h2>
+  <div class="src">
+    <ul>
+      <li>東京商工会議所＋日商「中小企業のインボイス・電帳法対応に関する調査」（n=3,149, 2024年9月）<br><a href="https://www.tokyo-cci.or.jp/page.jsp?id=1204038">https://www.tokyo-cci.or.jp/page.jsp?id=1204038</a></li>
+      <li>厚生労働省 job tag／一般職業紹介状況（税理士有効求人倍率）</li>
+      <li>日本税理士会連合会 実態調査（年齢構成・開業比率）</li>
+      <li>freee「税理士 繁忙期」解説 <a href="https://adv.freee.co.jp/column/tax-accountant-busy-season">https://adv.freee.co.jp/column/tax-accountant-busy-season</a></li>
+      <li>マネーフォワード パートナーブログ（電帳法対応4段階／DX遅延） <a href="https://biz.moneyforward.com/mfc-partner/blog/2231/">https://biz.moneyforward.com/mfc-partner/blog/2231/</a></li>
+      <li>ジャスネット会計人キャリア（繁忙期残業実態） <a href="https://career.jusnet.co.jp/tax/tax_05_45.php">https://career.jusnet.co.jp/tax/tax_05_45.php</a></li>
+      <li>ACCS「税理士業界の人手不足」 <a href="https://www.accs-c.co.jp/ma/magazine/tax-accountant-labor-shortage/">https://www.accs-c.co.jp/ma/magazine/tax-accountant-labor-shortage/</a></li>
+      <li>コトラ「税理士有効求人倍率」 <a href="https://www.kotora.jp/c/69146/">https://www.kotora.jp/c/69146/</a></li>
+      <li>中小企業診断士サポート「建設業向け補助金10種」 <a href="https://chushokigyo-support.or.jp/column/subsidy/construction-industry-subsidies/">https://chushokigyo-support.or.jp/column/subsidy/construction-industry-subsidies/</a></li>
+      <li>兵庫県中小企業同友会 補助金・助成金まとめ <a href="https://www.hyogo.doyu.jp/blog/post/202008120115/">https://www.hyogo.doyu.jp/blog/post/202008120115/</a></li>
+    </ul>
+  </div>
+
+  <footer>士業AI特典エージェント 題材リサーチ ／ Deep Research 出力 ／ 社外秘。</footer>
+
+</div>
+</body>
+</html>
