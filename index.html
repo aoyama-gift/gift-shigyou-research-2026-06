@@ -3,264 +3,905 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>士業AI特典エージェント 題材リサーチ</title>
+<title>業種別ペイン＆特典AIエージェント題材リサーチ</title>
 <style>
   :root{
     --bg:#f7f6f2; --card:#fff; --ink:#23231f; --muted:#67665f; --line:#e6e3da;
     --navy:#1a2e4a; --navy-bg:#e8edf5;
     --gold:#a07b1c; --gold-bg:#faf0d7;
     --pain:#a32d2d; --pain-bg:#faeaea;
-    --no1:#185fa5; --no1-bg:#e6f1fb;
-    --no2:#0f6e56; --no2-bg:#e1f5ee;
-    --no3:#534ab7; --no3-bg:#eeedfe;
-    --no4:#854f0b; --no4-bg:#faeeda;
-    --no5:#5f5e5a; --no5-bg:#f1efe8;
-    --red:#a32d2d;
+    --secret:#a32d2d;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--bg);color:var(--ink);line-height:1.75;
     font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;-webkit-font-smoothing:antialiased;}
-  .wrap{max-width:960px;margin:0 auto;padding:0 22px 100px;}
-  .secret{background:var(--red);color:#fff;text-align:center;font-size:13px;font-weight:700;padding:9px;position:sticky;top:0;z-index:10;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px 100px;}
+  .secret{background:var(--secret);color:#fff;text-align:center;font-size:13px;font-weight:700;padding:9px;position:sticky;top:0;z-index:10;}
   header{padding:42px 0 6px;}
   .eyebrow{color:var(--gold);font-weight:700;font-size:12px;letter-spacing:2px;text-transform:uppercase;}
-  h1{font-size:28px;font-weight:700;margin-top:4px;}
+  h1{font-size:30px;font-weight:700;margin-top:4px;}
   .lead{color:var(--muted);font-size:15px;margin-top:10px;}
-  .toc{background:var(--navy-bg);border-radius:12px;padding:14px 18px;margin-top:18px;font-size:13.5px;color:var(--navy);}
-  .toc b{color:var(--ink);}
+  .meta{color:var(--muted);font-size:12px;margin-top:6px;}
 
-  h2{font-size:21px;font-weight:700;margin:52px 0 8px;padding-top:10px;border-top:2px solid var(--navy);color:var(--navy);}
-  h3{font-size:16px;font-weight:700;margin:16px 0 6px;}
+  .nav-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:28px;}
+  .nav-card{display:block;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;border-left:5px solid var(--navy);transition:transform .12s ease,box-shadow .12s ease;}
+  .nav-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.06);}
+  .nav-card .name{font-weight:700;font-size:15px;}
+  .nav-card .top{font-size:12.5px;color:var(--muted);margin-top:4px;}
+
+  .industry{margin-top:60px;border-top:3px solid var(--navy);padding-top:18px;}
+  .industry .badge{display:inline-block;background:var(--navy);color:#fff;font-weight:700;font-size:12px;padding:4px 10px;border-radius:8px;letter-spacing:1px;}
+  .industry h2{font-size:24px;font-weight:700;margin-top:6px;color:var(--navy);}
+  .industry .sub{color:var(--muted);font-size:13.5px;margin-top:4px;}
+
+  h3{font-size:17px;font-weight:700;margin:30px 0 8px;color:var(--navy);}
+  h4{font-size:15px;font-weight:700;margin:14px 0 4px;}
   .note{color:var(--muted);font-size:13.5px;margin:4px 0 8px;}
 
-  .pain-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px;}
-  .pain{background:var(--pain-bg);border-left:4px solid var(--pain);border-radius:0 12px 12px 0;padding:14px 18px;}
-  .pain b{color:var(--pain);font-size:15px;}
-  .pain .stat{display:inline-block;background:#fff;color:var(--pain);font-weight:700;font-size:13px;padding:3px 10px;border-radius:8px;margin:6px 6px 0 0;border:1px solid #f1c5c5;}
-  .pain p{margin-top:6px;font-size:14px;}
+  .pain{background:var(--pain-bg);border-left:4px solid var(--pain);border-radius:0 12px 12px 0;padding:13px 17px;margin-top:10px;}
+  .pain b{color:var(--pain);font-size:14.5px;}
+  .pain .stat{display:inline-block;background:#fff;color:var(--pain);font-weight:700;font-size:12px;padding:3px 9px;border-radius:7px;margin:5px 5px 0 0;border:1px solid #f1c5c5;}
+  .pain p{margin-top:5px;font-size:13.5px;}
 
-  .rank{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-top:14px;box-shadow:0 1px 0 rgba(0,0,0,.02);}
-  .rank.no1{border-left:6px solid var(--no1);}
-  .rank.no2{border-left:6px solid var(--no2);}
-  .rank.no3{border-left:6px solid var(--no3);}
-  .rank.no4{border-left:6px solid var(--no4);}
-  .rank.no5{border-left:6px solid var(--no5);}
-  .rank .head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-  .badge{display:inline-block;color:#fff;font-weight:700;font-size:12px;padding:4px 10px;border-radius:8px;}
-  .badge.no1{background:var(--no1);}
-  .badge.no2{background:var(--no2);}
-  .badge.no3{background:var(--no3);}
-  .badge.no4{background:var(--no4);}
-  .badge.no5{background:var(--no5);}
-  .rank h3{margin:0;font-size:17px;}
-  .strength{display:inline-block;font-size:12px;font-weight:700;padding:3px 9px;border-radius:7px;background:var(--gold-bg);color:var(--gold);margin-left:auto;}
-  .rank dl{margin-top:10px;display:grid;grid-template-columns:90px 1fr;gap:4px 14px;font-size:14px;}
-  .rank dt{color:var(--muted);font-weight:700;font-size:12.5px;padding-top:2px;}
+  .rank{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px 18px;margin-top:11px;border-left:5px solid var(--navy);}
+  .rank .head{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+  .rank .pos{display:inline-block;color:#fff;background:var(--navy);font-weight:700;font-size:11.5px;padding:3px 8px;border-radius:6px;}
+  .rank h4{margin:0;font-size:15.5px;}
+  .strength{display:inline-block;font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:6px;background:var(--gold-bg);color:var(--gold);margin-left:auto;}
+  .rank dl{margin-top:8px;display:grid;grid-template-columns:80px 1fr;gap:3px 12px;font-size:13.5px;}
+  .rank dt{color:var(--muted);font-weight:700;font-size:12px;padding-top:2px;}
   .rank dd{margin:0;}
-  .rank .why{margin-top:10px;background:var(--navy-bg);border-radius:9px;padding:10px 14px;font-size:14px;}
+  .rank .why{margin-top:9px;background:var(--navy-bg);border-radius:8px;padding:9px 13px;font-size:13.5px;}
   .rank .why b{color:var(--navy);}
 
-  ul{margin:6px 0 0 4px;padding-left:22px;}
-  li{font-size:14px;margin:5px 0;}
+  .src-list{font-size:12.5px;color:var(--muted);margin-top:8px;padding-left:18px;}
+  .src-list a{color:var(--navy);word-break:break-all;}
+  .src-list li{margin:3px 0;}
 
-  .caveat{background:var(--gold-bg);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;padding:12px 16px;margin-top:10px;font-size:13.5px;color:#5b3f07;}
-  .caveat b{color:var(--gold);}
+  .cross{background:var(--gold-bg);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;padding:14px 18px;margin-top:14px;}
+  .cross b{color:var(--gold);}
+  .cross ul{margin:6px 0 0 4px;padding-left:22px;font-size:13.5px;}
 
-  .src{font-size:12.5px;color:var(--muted);margin-top:8px;}
-  .src a{color:var(--navy);word-break:break-all;}
+  .top-link{display:inline-block;font-size:12px;color:var(--muted);text-decoration:none;margin-top:14px;}
+  .top-link:hover{color:var(--navy);}
 
-  footer{margin-top:50px;border-top:1px solid var(--line);padding-top:14px;color:var(--muted);font-size:12.5px;}
+  footer{margin-top:60px;border-top:1px solid var(--line);padding-top:14px;color:var(--muted);font-size:12.5px;}
+
+  /* 業種別カラー */
+  [data-c="shigyou"]{--c:#1a2e4a;--cbg:#e8edf5;}
+  [data-c="kenchiku"]{--c:#c25b1a;--cbg:#fbeadd;}
+  [data-c="seizo"]{--c:#4a5560;--cbg:#e9ecef;}
+  [data-c="kouri"]{--c:#b03030;--cbg:#fae6e6;}
+  [data-c="iryou"]{--c:#2d7a5f;--cbg:#dff0e8;}
+  [data-c="unyu"]{--c:#185fa5;--cbg:#e0ecf7;}
+  [data-c="it"]{--c:#534ab7;--cbg:#ecebf7;}
+  [data-c="shukuhaku"]{--c:#1c8c8c;--cbg:#dff0f0;}
+  [data-c="kyouiku"]{--c:#a07b1c;--cbg:#faf0d7;}
+  [data-c="biyou"]{--c:#b04a7c;--cbg:#f7e3ed;}
+  [data-c="koukoku"]{--c:#8a3a6e;--cbg:#f1e1ec;}
+
+  .industry[data-c]{border-top-color:var(--c);}
+  .industry[data-c] h2,.industry[data-c] h3{color:var(--c);}
+  .industry[data-c] .badge{background:var(--c);}
+  .industry[data-c] .rank{border-left-color:var(--c);}
+  .industry[data-c] .rank .pos{background:var(--c);}
+  .industry[data-c] .rank .why{background:var(--cbg);}
+  .industry[data-c] .rank .why b{color:var(--c);}
+  .nav-card[data-c]{border-left-color:var(--c);}
+  .nav-card[data-c] .name{color:var(--c);}
 </style>
 </head>
 <body>
-<div class="secret">社外秘 — GIFT営業企画・特典エージェント設計用。社内と信頼できる相手だけに。</div>
-<div class="wrap">
+<div class="secret">社外秘 — GIFT営業企画・フォーム営業特典エージェント設計用。役員間共有・転送不可。</div>
+<div class="wrap" id="top">
 
   <header>
-    <div class="eyebrow">DEEP RESEARCH REPORT</div>
-    <h1>士業AI特典エージェント 題材リサーチ</h1>
-    <div class="lead">フォーム営業のフックとして「これを受け取るために60分商談に行く」と士業事務所長が思う特典AIエージェントの題材を、現場ペインから逆算する。対象＝税理士・社労士・公認会計士、1〜20名規模を主軸。</div>
-    <div class="toc"><b>目次：</b>① リサーチの問い ／ ② 士業事務所の主要ペイン5つ ／ ③ 特典エージェント題材 ランキング5本 ／ ④ 留保と未調査の論点 ／ ⑤ 主な出典</div>
+    <div class="eyebrow">CROSS-INDUSTRY PAIN RESEARCH</div>
+    <h1>業種別ペイン ＆ 特典AIエージェント題材リサーチ</h1>
+    <div class="lead">フォーム営業のフックとして「これを受け取るために60分商談に行く」と中小企業経営者が思う特典AIエージェントの題材を、業種別の現場ペインから逆算した。対象＝1〜30名規模・売上数億〜数十億円の中小企業。</div>
+    <div class="meta">11業種カバー ／ 日本市場・日本語前提 ／ クイックウィン（導入後1〜4週で現場体感）軸を最重視 ／ 数字は出典付き</div>
   </header>
 
-  <h2>① リサーチの問い</h2>
-  <p style="font-size:14.5px;">「フォーム営業で士業事務所に資料を送ったとき、所長が60分の商談に行ってでも受け取りたいと思う特典AIエージェントは何か」を、現場ペインの一次資料から逆算して答える。10論点（繁忙期／顧問先対応／新規受任／法改正／採用／DX／補助金／業種別／制度変化）を網羅した上で、題材を3〜5本ランク付け。</p>
-
-  <h2>② 士業事務所の主要ペイン（5つ）</h2>
-  <div class="note">5つは互いに強化し合い、特に中小事務所では分業が効かないため所長1人に負荷が集中する。</div>
-
-  <div class="pain-grid">
-    <div class="pain">
-      <b>1. 構造的繁忙期（11月〜翌5月の約7ヶ月）</b>
-      <div>
-        <span class="stat">残業 月50〜60h（一般企業の3〜4倍）</span>
-        <span class="stat">業界の23.3%が月80h超</span>
-        <span class="stat">1人で30〜100顧問先</span>
-      </div>
-      <p>年末調整→確定申告→3月決算法人申告の法定スケジュールに縛られて短縮不能。中小は分業できず所長個人の負荷が大手より大きい。</p>
-    </div>
-
-    <div class="pain">
-      <b>2. インボイス・電帳法による顧問先質問の爆増</b>
-      <div>
-        <span class="stat">中小企業の82.2%が事務負担増を実感</span>
-        <span class="stat">48.8%がコスト増</span>
-      </div>
-      <p>「これって経費？」「電帳法、うちはどこまで？」「インボイス番号確認した方がいい？」が顧問税理士に集中。所長の時間を最も奪う反復質問のトップ。</p>
-    </div>
-
-    <div class="pain">
-      <b>3. 採用難と高齢化</b>
-      <div>
-        <span class="stat">税理士 有効求人倍率 2.31倍（全産業の約1.85倍）</span>
-        <span class="stat">60歳以上が 53.6%</span>
-        <span class="stat">開業税理士の 71%</span>
-        <span class="stat">受験者 17年→20年で 52%減</span>
-      </div>
-      <p>人を増やせない・若手が辞める・後継がいない、の三重苦。AIによる省人化・新人育成代替・所長自身の代替への関心が高い。</p>
-    </div>
-
-    <div class="pain">
-      <b>4. 紙・FAX依存とDX遅延（二重構造）</b>
-      <div>
-        <span class="stat">顧問先がクラウド非対応</span>
-        <span class="stat">事務所内にIT専任を置けない</span>
-      </div>
-      <p>「DX化したいが時間がない・顧問先が紙のまま」が典型構造。「顧問先側にツールを覚えさせない／自然言語で代行する」設計のAIが刺さる。</p>
-    </div>
-
-    <div class="pain">
-      <b>5. 補助金提案を顧問業務として要求される傾向</b>
-      <div>
-        <span class="stat">建設だけで主要10種</span>
-        <span class="stat">IT導入 最大450万</span>
-        <span class="stat">ものづくり 最大3,000万</span>
-        <span class="stat">省力化 最大1億</span>
-      </div>
-      <p>提案できれば差別化・できなければ離反。本業の合間でキャッチアップしきれない領域＝AIで瞬時にレコメンドできれば価値が大きい。</p>
-    </div>
+  <h3 style="margin-top:34px;">業種ナビ（クリックで該当セクションへ）</h3>
+  <div class="nav-cards">
+    <a class="nav-card" data-c="shigyou" href="#shigyou"><div class="name">士業・コンサル</div><div class="top">即答質問オートレスポンダー</div></a>
+    <a class="nav-card" data-c="kenchiku" href="#kenchiku"><div class="name">建設・不動産</div><div class="top">AI見積・積算アシスタント</div></a>
+    <a class="nav-card" data-c="seizo" href="#seizo"><div class="name">製造・卸売</div><div class="top">FAX/PDF注文書→自動投入</div></a>
+    <a class="nav-card" data-c="kouri" href="#kouri"><div class="name">小売・飲食</div><div class="top">口コミ全件30秒返信ドラフト</div></a>
+    <a class="nav-card" data-c="iryou" href="#iryou"><div class="name">医療・介護・福祉</div><div class="top">ヘルパーシフト自動組み</div></a>
+    <a class="nav-card" data-c="unyu" href="#unyu"><div class="name">運輸・物流</div><div class="top">運賃値上げ交渉レター</div></a>
+    <a class="nav-card" data-c="it" href="#it"><div class="name">IT・サービス</div><div class="top">提案書・要件定義ドラフト</div></a>
+    <a class="nav-card" data-c="shukuhaku" href="#shukuhaku"><div class="name">宿泊・観光</div><div class="top">マルチOTA口コミ一括返信</div></a>
+    <a class="nav-card" data-c="kyouiku" href="#kyouiku"><div class="name">教育・学習塾</div><div class="top">保護者向け指導報告書自動生成</div></a>
+    <a class="nav-card" data-c="biyou" href="#biyou"><div class="name">美容・理美容</div><div class="top">口コミ返信ドラフト自動生成</div></a>
+    <a class="nav-card" data-c="koukoku" href="#koukoku"><div class="name">広告・PR・印刷</div><div class="top">コンペ提案書ドラフト生成</div></a>
   </div>
 
-  <h2>③ 特典エージェント題材 ランキング5本</h2>
-  <div class="note">「フォーム営業で配ったときの60分商談誘導効果」で順位付け。1〜3位はペインの数字で強く裏付けられた本命。4〜5位は経営課題に効くがエビデンスは中位。</div>
-
-  <div class="rank no1">
-    <div class="head">
-      <span class="badge no1">1位</span>
-      <h3>顧問先からの即答質問オートレスポンダー</h3>
-      <span class="strength">動機強度：最強</span>
-    </div>
-    <dl>
-      <dt>入力</dt><dd>顧問先からのメール／LINE／チャット原文（例「この交際費って経費？」「電帳法どこまで？」「インボイス番号確認すべき？」）</dd>
-      <dt>出力</dt><dd>① 事務所トーン＆過去回答スタイルの返信下書き ② 根拠条文 ③ 判断のグレー度合い ④ 所長エスカレーション要否の自動判定</dd>
-    </dl>
-    <div class="why">
-      <b>なぜ刺さるか：</b>インボイス導入後 82.2% の顧問先が事務負担増を実感、その問い合わせは全部税理士に来る。所長が「あとで答える」と溜め込むメールこそ最大の時間泥棒。<br>
-      <b>60分商談動機：</b>「繁忙期の問い合わせ対応を月20時間減らせる試算をその場で出します」と言えるため、商談コストを十分に上回る即時的リターンを提示できる。
-    </div>
-  </div>
-
-  <div class="rank no2">
-    <div class="head">
-      <span class="badge no2">2位</span>
-      <h3>顧問先業種別 補助金・助成金 月次自動レコメンドBot</h3>
-      <span class="strength">動機強度：強</span>
-    </div>
-    <dl>
-      <dt>入力</dt><dd>顧問先リスト（業種・従業員数・売上規模・直近の設備投資／採用計画）</dd>
-      <dt>出力</dt><dd>各顧問先に対して月初に「今月使える補助金トップ3＋採択率＋締切＋必要書類＋初動メール下書き」を自動配信</dd>
-    </dl>
-    <div class="why">
-      <b>なぜ刺さるか：</b>補助金は本業合間のキャッチアップが追いつかないが、顧問先からは提案を期待される。建設だけで10種・業種横断で常時数十種が走っている。<br>
-      <b>60分商談動機：</b>「これがあれば顧問料upを正当化できる／顧問先離反を防げる」と収益直結ロジックで動機付け可能。
-    </div>
-  </div>
-
-  <div class="rank no3">
-    <div class="head">
-      <span class="badge no3">3位</span>
-      <h3>法改正キャッチアップ＆顧問先別インパクト解説書ジェネレーター</h3>
-      <span class="strength">動機強度：強</span>
-    </div>
-    <dl>
-      <dt>入力</dt><dd>顧問先の属性（個人／法人、業種、給与水準、扶養家族、消費税課税方式）</dd>
-      <dt>出力</dt><dd>直近改正（インボイス／電帳法／新NISA／社保改正／定額減税／年収の壁）について「この顧問先にどう影響するか／何をいつまでに／所長として何を案内すべきか」のA4 1枚解説書</dd>
-    </dl>
-    <div class="why">
-      <b>なぜ刺さるか：</b>改正のたびに「全顧問先向け案内文」を所長が深夜に手書きしている現状を完全代替。<br>
-      <b>60分商談動機：</b>「毎回の改正対応で所長の徹夜が消える」という体感的ペインに直結。
-    </div>
-  </div>
-
-  <div class="rank no4">
-    <div class="head">
-      <span class="badge no4">4位</span>
-      <h3>新規受任プロセス自動化エージェント（面談→カルテ→見積→契約書）</h3>
-      <span class="strength">動機強度：中〜強</span>
-    </div>
-    <dl>
-      <dt>入力</dt><dd>問い合わせフォーム情報＋初回ヒアリングのzoom録音</dd>
-      <dt>出力</dt><dd>① 顧問先カルテ ② 顧問料見積（業界相場×規模×業務範囲） ③ 契約書ドラフト ④ 初回提案資料（補助金／節税スキーム3本付き）</dd>
-    </dl>
-    <div class="why">
-      <b>なぜ刺さるか：</b>新規受任は所長自身が動かざるを得ないが繁忙期は完全に止まる＝機会損失。<br>
-      <b>60分商談動機：</b>「新規獲得を所長が動かずに進められる」は売上直結のため動機強度は大きいが、効果実感に時間差あり。
-    </div>
-  </div>
-
-  <div class="rank no5">
-    <div class="head">
-      <span class="badge no5">5位</span>
-      <h3>新人OJT＆判断トレーニングAIメンター</h3>
-      <span class="strength">動機強度：中〜強</span>
-    </div>
-    <dl>
-      <dt>入力</dt><dd>新人スタッフが入力した仕訳・申告書・顧問先返信ドラフト</dd>
-      <dt>出力</dt><dd>① 所長スタイルでの添削＋根拠条文 ② 誤りパターン照合 ③ 次に学ぶべきテーマ ④ 所長への週次レポート（誰がどこで詰まっているか）</dd>
-    </dl>
-    <div class="why">
-      <b>なぜ刺さるか：</b>採用難（求人倍率2.31倍）・若手の早期離職・所長が育成に割く時間がない、の三重苦の解決策。<br>
-      <b>60分商談動機：</b>「所長が育成から解放される＋若手定着率up」は採用コスト削減と人材確保の両方に効くが、効果実感には時間がかかる。
-    </div>
-  </div>
-
-  <h2>④ 留保と未調査の論点</h2>
-  <div class="caveat">
-    <b>留保（このレポートの限界）</b>
+  <div class="cross" style="margin-top:24px;">
+    <b>業種横断インサイト：刺さる題材の共通パターン</b>
     <ul>
-      <li>証拠の中心は税理士。社労士・公認会計士固有のペインは類推で広げているため、別業種向けには追加チューニングが必要。</li>
-      <li>「60分商談動機」は検証済みペインからの論理的推測であり、フォーム営業のA/Bテスト実測ではない。</li>
-      <li>「事務所トーンでの返信」品質は顧問先個別データ学習が前提のため、フォーム営業の汎用デモと実導入版にはギャップが出る。</li>
-      <li>補助金額・採択率・有効求人倍率などの数字は年度ごとに変動する。実装時は最新値の自動取得設計が必須。</li>
-    </ul>
-  </div>
-  <div class="caveat">
-    <b>次に詰めたい論点</b>
-    <ul>
-      <li>社労士事務所固有ペイン（給与計算・社保手続き・36協定・就業規則）の所長時間泥棒ランキング。</li>
-      <li>顧問先業種別（建設・不動産・医療・小売・飲食）の即答質問トップ10。業種特化版 vs 業種横断版、どちらが刺さるか。</li>
-      <li>所長の「顧問先データをAIに渡すこと」へのコンプライアンス抵抗レベル。汎用デモ版で「顧問先データ不要」の設計の方が刺さる可能性。</li>
-      <li>士業向けマーケで「AIを特典として配ったときの返信率・商談化率」のA/Bテストデータ。</li>
+      <li><b>毎日触る痛みを消す</b>：口コミ返信／問い合わせ返信／報告書作成は、ほぼ全業種で「夜の30〜60分」の隠れ残業を生んでいる。1位常連。</li>
+      <li><b>金額換算しやすい</b>：補助金診断／値上げ交渉／受注率改善は、商談で経営者の財布に直結する話に変換できる。</li>
+      <li><b>属人化・人手不足の即効薬</b>：シフト組み／引継ぎ／新人育成は、採用難・離職率の高い業種で動機強度が高い。</li>
+      <li><b>2024-2026年の制度改正フック</b>：インボイス／電帳法／建設業法／介護報酬／物流2024年問題が「今やる理由」を提供。</li>
     </ul>
   </div>
 
-  <h2>⑤ 主な出典</h2>
-  <div class="src">
-    <ul>
-      <li>東京商工会議所＋日商「中小企業のインボイス・電帳法対応に関する調査」（n=3,149, 2024年9月）<br><a href="https://www.tokyo-cci.or.jp/page.jsp?id=1204038">https://www.tokyo-cci.or.jp/page.jsp?id=1204038</a></li>
-      <li>厚生労働省 job tag／一般職業紹介状況（税理士有効求人倍率）</li>
-      <li>日本税理士会連合会 実態調査（年齢構成・開業比率）</li>
-      <li>freee「税理士 繁忙期」解説 <a href="https://adv.freee.co.jp/column/tax-accountant-busy-season">https://adv.freee.co.jp/column/tax-accountant-busy-season</a></li>
-      <li>マネーフォワード パートナーブログ（電帳法対応4段階／DX遅延） <a href="https://biz.moneyforward.com/mfc-partner/blog/2231/">https://biz.moneyforward.com/mfc-partner/blog/2231/</a></li>
-      <li>ジャスネット会計人キャリア（繁忙期残業実態） <a href="https://career.jusnet.co.jp/tax/tax_05_45.php">https://career.jusnet.co.jp/tax/tax_05_45.php</a></li>
-      <li>ACCS「税理士業界の人手不足」 <a href="https://www.accs-c.co.jp/ma/magazine/tax-accountant-labor-shortage/">https://www.accs-c.co.jp/ma/magazine/tax-accountant-labor-shortage/</a></li>
-      <li>コトラ「税理士有効求人倍率」 <a href="https://www.kotora.jp/c/69146/">https://www.kotora.jp/c/69146/</a></li>
-      <li>中小企業診断士サポート「建設業向け補助金10種」 <a href="https://chushokigyo-support.or.jp/column/subsidy/construction-industry-subsidies/">https://chushokigyo-support.or.jp/column/subsidy/construction-industry-subsidies/</a></li>
-      <li>兵庫県中小企業同友会 補助金・助成金まとめ <a href="https://www.hyogo.doyu.jp/blog/post/202008120115/">https://www.hyogo.doyu.jp/blog/post/202008120115/</a></li>
-    </ul>
-  </div>
+  <!-- ===== 1. 士業・コンサル ===== -->
+  <section class="industry" data-c="shigyou" id="shigyou">
+    <span class="badge">01 / SHIGYOU</span>
+    <h2>士業・コンサル（税理士・社労士・公認会計士）</h2>
+    <div class="sub">対象：1〜20名規模 ／ 構造的繁忙期7ヶ月＋インボイス質問爆増＋採用難＋紙依存＋補助金提案要求が複合</div>
 
-  <footer>士業AI特典エージェント 題材リサーチ ／ Deep Research 出力 ／ 社外秘。</footer>
+    <h3>主要ペイン</h3>
+    <div class="pain"><b>1. 構造的繁忙期7ヶ月（11月〜翌5月）</b>
+      <div><span class="stat">残業 月50〜60h</span><span class="stat">業界の23.3%が月80h超</span><span class="stat">1人で30〜100顧問先</span></div>
+      <p>年末調整→確定申告→3月決算法人申告の法定スケジュールで短縮不能。中小は分業できず所長個人の負荷が大きい。</p>
+    </div>
+    <div class="pain"><b>2. インボイス・電帳法による顧問先質問の爆増</b>
+      <div><span class="stat">中小企業の82.2%が事務負担増</span><span class="stat">48.8%がコスト増</span></div>
+      <p>「これって経費？」「電帳法どこまで？」が顧問税理士に集中。所長の時間を最も奪う反復質問のトップ。</p>
+    </div>
+    <div class="pain"><b>3. 採用難と高齢化</b>
+      <div><span class="stat">税理士 有効求人倍率 2.31倍</span><span class="stat">60歳以上が 53.6%</span><span class="stat">受験者 15年で 52%減</span></div>
+      <p>人を増やせない・若手が辞める・後継がいない、の三重苦。</p>
+    </div>
+    <div class="pain"><b>4. 紙・FAX依存とDX遅延（二重構造）</b>
+      <p>「DX化したいが時間がない・顧問先が紙のまま」が典型構造。「顧問先側にツールを覚えさせない／自然言語で代行」のAIが刺さる。</p>
+    </div>
+    <div class="pain"><b>5. 補助金提案を顧問業務として要求される傾向</b>
+      <div><span class="stat">建設だけで主要10種</span><span class="stat">IT導入 最大450万</span></div>
+      <p>提案できれば差別化、できなければ離反。本業の合間でキャッチアップしきれない領域。</p>
+    </div>
+
+    <h3>特典AIエージェント題材ランキング</h3>
+    <div class="rank">
+      <div class="head"><span class="pos">1位</span><h4>顧問先からの即答質問オートレスポンダー</h4><span class="strength">動機：最強 ／ QW：1〜2週</span></div>
+      <dl><dt>入力</dt><dd>顧問先からのメール／LINE／チャット原文</dd>
+      <dt>出力</dt><dd>事務所トーンの返信下書き／根拠条文／判断のグレー度合い／エスカレ要否</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>顧問先82.2%が事務負担増を実感、問い合わせは全部税理士に集中。月20h削減の試算をその場で出せる。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">2位</span><h4>顧問先業種別 補助金月次レコメンドBot</h4><span class="strength">動機：強 ／ QW：2〜4週</span></div>
+      <dl><dt>入力</dt><dd>顧問先リスト（業種・規模・直近の設備投資／採用計画）</dd>
+      <dt>出力</dt><dd>各顧問先に月初「使える補助金トップ3＋採択率＋締切＋初動メール下書き」</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>顧問料up・離反防止の収益直結ロジック。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">3位</span><h4>法改正キャッチアップ＆顧問先別解説書ジェネレーター</h4><span class="strength">動機：強 ／ QW：1〜2週</span></div>
+      <dl><dt>入力</dt><dd>顧問先の属性（個人／法人、業種、給与水準、消費税課税方式）</dd>
+      <dt>出力</dt><dd>改正の顧問先別影響A4 1枚（インボイス／電帳法／新NISA／社保改正）</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>改正のたびに「全顧問先向け案内文」を所長が深夜に手書きしている現状を完全代替。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">4位</span><h4>新規受任プロセス自動化（面談→カルテ→見積→契約書）</h4><span class="strength">動機：中〜強 ／ QW：3〜4週</span></div>
+      <dl><dt>入力</dt><dd>問い合わせフォーム情報＋初回ヒアリングzoom録音</dd>
+      <dt>出力</dt><dd>顧問先カルテ／顧問料見積／契約書ドラフト／初回提案資料</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>繁忙期に止まる新規受任を解消。売上直結だが効果実感に時間差。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">5位</span><h4>新人OJT＆判断トレーニングAIメンター</h4><span class="strength">動機：中〜強 ／ QW：3〜4週</span></div>
+      <dl><dt>入力</dt><dd>新人スタッフが入力した仕訳・申告書・顧問先返信ドラフト</dd>
+      <dt>出力</dt><dd>所長スタイルでの添削／誤りパターン／所長への週次レポート</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>採用難・若手早期離職・所長が育成に割く時間がない、三重苦の解決策。</div>
+    </div>
+
+    <h3>主要出典</h3>
+    <ul class="src-list">
+      <li><a href="https://www.tokyo-cci.or.jp/page.jsp?id=1204038">東京商工会議所＋日商 インボイス・電帳法対応に関する調査（n=3,149, 2024年9月）</a></li>
+      <li><a href="https://adv.freee.co.jp/column/tax-accountant-busy-season">freee 税理士 繁忙期</a></li>
+      <li><a href="https://biz.moneyforward.com/mfc-partner/blog/2231/">マネーフォワード パートナーブログ（電帳法・DX遅延）</a></li>
+      <li><a href="https://www.accs-c.co.jp/ma/magazine/tax-accountant-labor-shortage/">ACCS 税理士業界の人手不足</a></li>
+      <li><a href="https://www.kotora.jp/c/69146/">コトラ 税理士有効求人倍率</a></li>
+    </ul>
+    <a class="top-link" href="#top">▲ 業種ナビに戻る</a>
+  </section>
+
+  <!-- ===== 2. 建設・不動産 ===== -->
+  <section class="industry" data-c="kenchiku" id="kenchiku">
+    <span class="badge">02 / KENCHIKU</span>
+    <h2>建設・不動産（地場ゼネコン・工務店・地域仲介）</h2>
+    <div class="sub">対象：1〜30名規模 ／ 2024年問題＋改正建設業法（2025/12施行）＋積算属人化＋紙/FAXが複合</div>
+
+    <h3>主要ペイン</h3>
+    <div class="pain"><b>1. 事務作業に潰される経営者・職人（紙/FAX/電話の壁）</b>
+      <div><span class="stat">経営者の50%が毎日2h以上を事務作業</span><span class="stat">日程・工程管理の56%が紙/ホワイトボード</span><span class="stat">原価管理ツール利用率23%</span></div>
+      <p>FAX・電話・メールが「使い慣れている」ため日常業務の中心であり続けている。</p>
+    </div>
+    <div class="pain"><b>2. 人手不足と若手定着の崩壊（2025年問題）</b>
+      <div><span class="stat">69%が「人手不足で仕事を断る」</span><span class="stat">55歳以上が36.7%</span><span class="stat">29歳以下11.7%</span><span class="stat">新規高卒3年離職率43%</span></div>
+      <p>2025年時点で約90万人の労働力不足予測。</p>
+    </div>
+    <div class="pain"><b>3. 見積・積算・拾い出しの三重苦</b>
+      <div><span class="stat">AI積算で数量拾い・見積を最大70%削減実績</span><span class="stat">別事例で作業時間85%短縮</span></div>
+      <p>中堅工務店では「積算担当者がいない・残業もできない・精度も落とせない」三重苦が常態化。</p>
+    </div>
+    <div class="pain"><b>4. 不動産仲介の重説・契約書作成が時間ブラックホール</b>
+      <div><span class="stat">賃貸重説に平均240分</span><span class="stat">売買契約に300分</span><span class="stat">AI活用で賃貸最短10分・売買30分</span></div>
+      <p>宅建士の厳格チェック必須という制約あり。</p>
+    </div>
+    <div class="pain"><b>5. 改正建設業法 2025年12月12日完全施行</b>
+      <p>元請-下請間で労務費・法定福利費を内訳明示した見積書の努力義務、社会保険未加入業者との契約制限、過度に短い工期の禁止、資材高騰リスク事前通知義務など、書面実務が一気に増加。</p>
+    </div>
+
+    <h3>特典AIエージェント題材ランキング</h3>
+    <div class="rank">
+      <div class="head"><span class="pos">1位</span><h4>AI見積・積算アシスタント（PDF図面→見積書ドラフト）</h4><span class="strength">動機：最強 ／ QW：1週</span></div>
+      <dl><dt>入力</dt><dd>施主・元請からのPDF平面図、過去の単価マスタExcel、案件種別</dd>
+      <dt>出力</dt><dd>数量拾い表（部位別）／概算見積書（材料費・労務費・法定福利費の内訳付き）／改正建設業法準拠フォーマット</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>積算担当が1人もしくは社長兼任の中小工務店で、夜中までやっていた作業が5〜10分に。持参PDF1枚で「今ここで」体感できる。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">2位</span><h4>重説・契約書類ドラフトAI（物件情報→重要事項説明書）</h4><span class="strength">動機：最強 ／ QW：1週</span></div>
+      <dl><dt>入力</dt><dd>物件住所、レインズ/SUUMO物件情報、登記情報PDF、契約条件メモ</dd>
+      <dt>出力</dt><dd>重要事項説明書ドラフト（宅建業法チェックリスト付き）／賃貸借契約書ドラフト／特約案</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>1件240〜300分の作業が10〜30分。最終確認は宅建士という建付けで法的にも逃げ道がある。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">3位</span><h4>現場日報・施工写真AIまとめ（LINE/写真→週次レポート＆発注書）</h4><span class="strength">動機：強 ／ QW：1〜2週</span></div>
+      <dl><dt>入力</dt><dd>職人がLINEに送った現場写真、ボイスメモ、手書き日報の写真</dd>
+      <dt>出力</dt><dd>日次/週次レポート／必要資材の発注書ドラフト／元請提出用の進捗報告</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>紙/FAX/電話/LINEに散在する現場情報を整理する役。56%が紙管理という現状に直撃。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">4位</span><h4>物件問い合わせ一次対応＆内見調整AI（24時間自動返信＋カレンダー）</h4><span class="strength">動機：強 ／ QW：1週</span></div>
+      <dl><dt>入力</dt><dd>SUUMO/HOME'S/自社サイトからの問い合わせメール、空き枠カレンダー、物件マスタ</dd>
+      <dt>出力</dt><dd>一次回答メール／内見候補日3案／社内Slackへの引継ぎサマリー</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>SUUMOで月5〜30万円払う中小仲介は問い合わせ取りこぼし＝広告費の蒸発。夜間・休日の自動化が直接売上に直結。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">5位</span><h4>補助金・改正建設業法 適合チェックAI</h4><span class="strength">動機：強 ／ QW：2〜4週</span></div>
+      <dl><dt>入力</dt><dd>会社規模・業種コード・直近賃上げ状況・導入したい設備</dd>
+      <dt>出力</dt><dd>IT導入補助金／省力化補助金／建設市場整備補助金の適合度／申請書類雛形／改正建設業法対応チェックリスト</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>「使えるのに知らない」状態を解消。改正建設業法の対応コスト負担と同時に解決できる切り口は社長の財布に直撃。</div>
+    </div>
+
+    <h3>主要出典</h3>
+    <ul class="src-list">
+      <li><a href="https://prtimes.jp/main/html/rd/p/000000025.000080019.html">建設業の2024年問題に関する動向調査（クラフトバンク）</a></li>
+      <li><a href="https://canon.jp/biz/solution/smb/tips/trend/kensetsugyohou-2025">2025年施行 建設業法等改正（キヤノンMJ）</a></li>
+      <li><a href="https://www.mlit.go.jp/tochi_fudousan_kensetsugyo/const/content/001493958.pdf">国土交通省 最近の建設業を巡る状況について</a></li>
+      <li><a href="https://www.optimax.co.jp/ai-information/construction-cost-control-ai/">積算AIとは？建設業の数量拾い・見積を70%効率化（OptiMax）</a></li>
+      <li><a href="https://www.aidma-hd.jp/ai/ai-important-theory/">AI重説ツールのおすすめ7選（AIDMA）</a></li>
+    </ul>
+    <a class="top-link" href="#top">▲ 業種ナビに戻る</a>
+  </section>
+
+  <!-- ===== 3. 製造・卸売 ===== -->
+  <section class="industry" data-c="seizo" id="seizo">
+    <span class="badge">03 / SEIZO</span>
+    <h2>製造・卸売（町工場・部品加工・食品加工・地場卸・専門商社）</h2>
+    <div class="sub">対象：1〜30名規模 ／ FAX受発注＋経理1人＋見積属人化＋外国人材育成就労移行＋補助金書類が複合</div>
+
+    <h3>主要ペイン</h3>
+    <div class="pain"><b>1. FAX/電話受発注の手入力地獄</b>
+      <div><span class="stat">製造業の約76%がFAX受発注</span><span class="stat">日本企業全体でも46%が業務利用</span></div>
+      <p>下請けは「取引先にやめてくれと言えない」構造で、独自フォーマット注文書が散乱しヒューマンエラー多発。</p>
+    </div>
+    <div class="pain"><b>2. 経理1人運営×インボイス＆電帳法のラスト1マイル</b>
+      <div><span class="stat">インボイスで82.2%が事務負担増</span><span class="stat">売上1千万円以下の92%が経理1人運用</span><span class="stat">2026/10から仕入税額控除80%→50%</span></div>
+      <p>2026年10月から免税事業者からの仕入税額控除が縮小、2割特例も2026年9月で終了。</p>
+    </div>
+    <div class="pain"><b>3. 見積・短納期回答の属人化</b>
+      <p>見積作成プロセスが特定従業員依存となり不在時に業務停滞、若手が育たず受注機会損失。商社経由の見積往復は人介在で長時間化。</p>
+    </div>
+    <div class="pain"><b>4. 人手不足×外国人材オペレーション切替（育成就労）</b>
+      <div><span class="stat">製造業の56.3%が「人手不足が経営に影響」</span><span class="stat">2027/4から育成就労、2年で43万人枠</span></div>
+      <p>現場の指示書・教育・契約管理の作り直し圧。</p>
+    </div>
+    <div class="pain"><b>5. 補助金（ものづくり/省力化）の申請書類負担と低採択率</b>
+      <div><span class="stat">ものづくり補助金22次 採択率37.5%</span><span class="stat">省力化補助金 採択率約61.5%</span></div>
+      <p>2026年度は「新事業進出・ものづくり補助金」に統合再編、賃上げ要件未達は返還義務あり。</p>
+    </div>
+
+    <h3>特典AIエージェント題材ランキング</h3>
+    <div class="rank">
+      <div class="head"><span class="pos">1位</span><h4>FAX/PDF注文書 → 基幹システム自動投入エージェント</h4><span class="strength">動機：最強 ／ QW：1〜2週</span></div>
+      <dl><dt>入力</dt><dd>取引先からのFAX画像・PDF・メール添付の注文書（独自フォーマット混在OK）</dd>
+      <dt>出力</dt><dd>品番・数量・納期・単価を抽出→自社基幹の受注フォーマットに変換／要確認行のみハイライト</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>「FAXやめられない問題」を取引先に頼まず内側だけで解決。受注担当の手入力工数とミスが即減る。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">2位</span><h4>2026年10月インボイス変更 駆け込み診断＆仕訳補助</h4><span class="strength">動機：最強 ／ QW：即日</span></div>
+      <dl><dt>入力</dt><dd>自社の請求書PDF・取引先一覧（免税/課税の別不明でOK）</dd>
+      <dt>出力</dt><dd>免税仕入先洗い出し／10月以降の追加負担額試算／2割特例終了の追加納税額／電子取引データ保存要件チェック</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>2026年10月の制度改定が目前で「経理1人」の中小に確実に当たる。試算金額が出るので商談に持ち込みやすい。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">3位</span><h4>見積・短納期回答 即出しエージェント（過去案件ベース）</h4><span class="strength">動機：強 ／ QW：2〜3週</span></div>
+      <dl><dt>入力</dt><dd>図面PDF/仕様メモ・数量・希望納期、過去の見積実績Excel</dd>
+      <dt>出力</dt><dd>類似案件3件抽出→単価レンジ・標準納期・粗利見込み／客先返信メール下書き</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>営業の「ベテラン待ち」をなくし当日回答率を上げる。失注理由トップの「回答遅い」を直撃。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">4位</span><h4>ものづくり/省力化補助金 申請書ドラフト生成</h4><span class="strength">動機：強 ／ QW：2〜3週</span></div>
+      <dl><dt>入力</dt><dd>自社概要・直近決算サマリ・導入したい設備/ソフトのメモ</dd>
+      <dt>出力</dt><dd>事業計画書（課題→解決策→投資効果→賃上げ計画）／加点項目チェックリスト／採択事例との差分指摘</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>採択率30%台のものづくり補助金、61%台の省力化補助金、両方とも「書類を書けない」が最大ボトルネック。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">5位</span><h4>外国人材 多言語作業手順書＆指示書自動生成</h4><span class="strength">動機：中〜強 ／ QW：2週</span></div>
+      <dl><dt>入力</dt><dd>日本語の作業手順メモ・写真・現場のヒヤリハット記録</dd>
+      <dt>出力</dt><dd>ベトナム語・インドネシア語・ミャンマー語等の手順書（ふりがな/イラスト位置指定込み）／教育チェックリスト</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>2027年4月の育成就労制度移行で全社オペ刷新が必要。「教える時間がない」現場の即効薬。</div>
+    </div>
+
+    <h3>主要出典</h3>
+    <ul class="src-list">
+      <li><a href="https://voix.jp/biz/news/168363/">FactoryOSが解き明かす、製造業におけるFAX受注が消えない理由</a></li>
+      <li><a href="https://www.jcci.or.jp/news/news/2024/0909113000.html">日商 中小企業におけるインボイス・電帳法・バックオフィス実態調査</a></li>
+      <li><a href="https://cashmo.jp/blog/2025/07/02/invoice-systems-special-transitional-measures-will-be-revised-from-october-2026/">2026年10月変わるインボイス特例措置</a></li>
+      <li><a href="https://www.meti.go.jp/report/whitepaper/mono/2025/pdf/honbun_1_2_1.pdf">ものづくり白書2025（経済産業省）</a></li>
+      <li><a href="https://www.nikkei.com/article/DGXZQOUA2281L0S5A221C2000000/">労働力不足43万人、外国人「育成就労」（日経）</a></li>
+      <li><a href="https://www.sme-support.co.jp/column/p7663/">2026年最新 ものづくり補助金23次採択率</a></li>
+    </ul>
+    <a class="top-link" href="#top">▲ 業種ナビに戻る</a>
+  </section>
+
+  <!-- ===== 4. 小売・飲食 ===== -->
+  <section class="industry" data-c="kouri" id="kouri">
+    <span class="badge">04 / KOURI</span>
+    <h2>小売・飲食（地域スーパー・専門小売・カフェ／居酒屋／中食／多店舗チェーン）</h2>
+    <div class="sub">対象：1〜30名規模 ／ 仕入れ高騰＋人手不足＋最賃上昇＋口コミ対応＋SNS運用が複合</div>
+
+    <h3>主要ペイン</h3>
+    <div class="pain"><b>1. 仕入れ価格高騰でメニュー改定が追いつかない</b>
+      <div><span class="stat">飲食店95%が仕入れ価格上昇を実感</span><span class="stat">約7割が10%超の仕入れコスト増</span><span class="stat">原価率平均36%前後</span></div>
+      <p>2025年1-4月の値上げ品目11,707件・平均改定率16%。</p>
+    </div>
+    <div class="pain"><b>2. 慢性的な人手不足とシフト作成負担</b>
+      <div><span class="stat">飲食店の非正社員不足割合 61.8%</span><span class="stat">接客・給仕の有効求人倍率3.59〜4.01倍</span></div>
+      <p>業種別ワースト2位。</p>
+    </div>
+    <div class="pain"><b>3. 最低賃金引上げ＋物価高のダブルパンチ</b>
+      <div><span class="stat">最低賃金 1,055円（2024/10）</span><span class="stat">業務改善助成金 上限600万円</span></div>
+      <p>2026年秋に1,100円台到達見通し。</p>
+    </div>
+    <div class="pain"><b>4. Google口コミ・食べログ返信に追われる店長</b>
+      <div><span class="stat">来店判断の安心ラインは星3.8以上</span><span class="stat">件数30件以上必須・101件以上推奨</span></div>
+      <p>「全件返信」が推奨される一方、無反応は印象悪化。</p>
+    </div>
+    <div class="pain"><b>5. SNS投稿・販促の工数破綻</b>
+      <div><span class="stat">飲食店8割がInstagram集客活用</span><span class="stat">中小5割が「投稿内容を考えるのに時間がかかる」</span></div>
+      <p>1投稿に5時間かかる業種事例も。</p>
+    </div>
+
+    <h3>特典AIエージェント題材ランキング</h3>
+    <div class="rank">
+      <div class="head"><span class="pos">1位</span><h4>口コミ全件「30秒返信ドラフト」エージェント</h4><span class="strength">動機：最強 ／ QW：1週以内</span></div>
+      <dl><dt>入力</dt><dd>店舗URL（または口コミ本文コピペ）、店長の口癖／NGワード、署名</dd>
+      <dt>出力</dt><dd>星評価別の返信文3案＋謝罪/感謝/再来店促進の使い分けタグ</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>店長の最大ストレス「夜の口コミ返信30分」が即消える。星0.1差が来店を左右する事実と直結。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">2位</span><h4>今日のシフト穴埋め＆人件費アラートAI</h4><span class="strength">動機：最強 ／ QW：1〜2週</span></div>
+      <dl><dt>入力</dt><dd>シフト表、ピーク帯売上目安、最低賃金（地域別）、希望人件費率</dd>
+      <dt>出力</dt><dd>穴の空いた時間帯リスト／最低人員違反アラート／人件費率シミュ／LINEヘルプ募集テンプレ</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>最賃1,100円時代の「組み間違い＝赤字」を即可視化。シフト作成3時間→30分の体感。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">3位</span><h4>仕入れ値上げ対応「値付け＆原価率」電卓AI</h4><span class="strength">動機：強 ／ QW：2〜4週</span></div>
+      <dl><dt>入力</dt><dd>メニュー名／現行価格／レシピ（食材＋g数）／仕入価格表</dd>
+      <dt>出力</dt><dd>原価率を目標値に戻す新価格3案／客離れを抑える「セット組替え／量目調整／看板商品据置」プラン</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>62%の店が値上げ実施中だが計算と告知が属人化。商談で「うちのメニューで試したい」が出やすい。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">4位</span><h4>Instagram＆チラシ販促文ジェネレーター</h4><span class="strength">動機：強 ／ QW：1週</span></div>
+      <dl><dt>入力</dt><dd>本日のおすすめ品（写真1枚＋一言）、店舗のトーン、ターゲット</dd>
+      <dt>出力</dt><dd>Instagram投稿文（ハッシュタグ込）／GBP投稿文／A4チラシ用キャッチコピー3案／撮影アングル指示</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>「投稿を考える時間」が5割の店の最大課題。1投稿5時間→5分は劇的体感。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">5位</span><h4>業務改善助成金「申請下書き」アシスタント</h4><span class="strength">動機：強 ／ QW：3〜4週</span></div>
+      <dl><dt>入力</dt><dd>現在の事業場内最低賃金、引き上げ予定額、導入したい設備、従業員数</dd>
+      <dt>出力</dt><dd>助成額シミュ（最大600万円）／必要書類チェックリスト／申請書ドラフト</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>「賃上げ原資が出ない」を「国の助成金で取り戻せる」に変換。経営者の財布の話なので商談直結。</div>
+    </div>
+
+    <h3>主要出典</h3>
+    <ul class="src-list">
+      <li><a href="https://www.inshokuten.com/foodist/article/8108/">飲食店の約7割が10%超の仕入れコスト増（飲食店ドットコム）</a></li>
+      <li><a href="https://www.tdb.co.jp/report/economic/20251226-neage25y12/">食品主要195社価格改定動向調査（帝国データバンク）</a></li>
+      <li><a href="https://hojyokin-portal.jp/columns/chingin_hikiage_package">賃金引き上げ助成金まとめ2026（補助金ポータル）</a></li>
+      <li><a href="https://prtimes.jp/main/html/rd/p/000000046.000116281.html">飲食業界向けGoogle口コミ調査レポート</a></li>
+      <li><a href="https://sinis-i.tetemarche.co.jp/content/trend/HKmt0D-Y">飲食店の8割が集客にInstagramを活用（SINIS）</a></li>
+    </ul>
+    <a class="top-link" href="#top">▲ 業種ナビに戻る</a>
+  </section>
+
+  <!-- ===== 5. 医療・介護・福祉 ===== -->
+  <section class="industry" data-c="iryou" id="iryou">
+    <span class="badge">05 / IRYOU</span>
+    <h2>医療・介護・福祉（診療所・歯科・整骨院・調剤薬局・訪問介護／通所介護／障害福祉）</h2>
+    <div class="sub">対象：1〜30名規模 ／ ヘルパー不足＋LIFE加算＋電話予約対応＋レセプト＋運営指導が複合</div>
+
+    <h3>主要ペイン</h3>
+    <div class="pain"><b>1. 訪問介護のヘルパー不足とシフト調整地獄</b>
+      <div><span class="stat">訪問介護員 有効求人倍率 15.53倍</span><span class="stat">現職ヘルパーの4人に1人が65歳超</span><span class="stat">2023年の訪問介護事業者倒産 60件で過去最多水準</span></div>
+      <p>1人訪問のため代替が効かずシフト調整が経営者個人の手作業に依存。</p>
+    </div>
+    <div class="pain"><b>2. LIFE提出頻度引き上げ＋処遇改善加算一本化の事務地獄</b>
+      <div><span class="stat">LIFE提出が6か月→3か月に1回へ</span></div>
+      <p>処遇改善加算は3加算が「介護職員等処遇改善加算」に一本化されたが、算定をあきらめる事業所が出るほどの事務負担。</p>
+    </div>
+    <div class="pain"><b>3. クリニック・歯科の電話予約対応がスタッフ業務の40%</b>
+      <div><span class="stat">医院への電話の70%以上が予約関連</span><span class="stat">業務時間の約40%が電話予約対応</span></div>
+      <p>診療中の取り逃し・予約変更・キャンセル待ちの手作業が常態化。</p>
+    </div>
+    <div class="pain"><b>4. レセプト返戻・査定による入金遅延と再請求工数</b>
+      <p>名前/性別/生年月日/番号の誤記、初再診料算定ミス、検査・処置の重複算定、摘要欄記載漏れが返戻・査定の主因。</p>
+    </div>
+    <div class="pain"><b>5. 運営指導（旧・実地指導）の書類準備パニック</b>
+      <p>6年に1回以上必ず実施、約1か月前に通知が届く。日々の書類管理が崩れていると1か月で間に合わない。</p>
+    </div>
+
+    <h3>特典AIエージェント題材ランキング</h3>
+    <div class="rank">
+      <div class="head"><span class="pos">1位</span><h4>ヘルパーシフト自動組みエージェント（訪問介護・通所介護向け）</h4><span class="strength">動機：最強 ／ QW：1〜2週</span></div>
+      <dl><dt>入力</dt><dd>ヘルパー名簿（資格・週稼働可能枠・運転可否）、利用者の訪問必要時間帯と所要分、地理エリア</dd>
+      <dt>出力</dt><dd>1週間分のシフト案（移動時間最小化＋資格マッチ）／欠勤発生時の代替候補ランキング／過不足アラート</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>求人倍率15.53倍の最深ペイン直撃。経営者・サ責が深夜にExcel手作業で組む実態に対し、「明日から30秒で組み直し」が体感できる。<br><b>注意：</b>利用者氏名は匿名ID化必須。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">2位</span><h4>LIFE提出CSV下書き＋3か月評価リマインダー</h4><span class="strength">動機：強 ／ QW：2〜3週</span></div>
+      <dl><dt>入力</dt><dd>介護ソフトのケース記録CSV、対象利用者リスト、前回提出日</dd>
+      <dt>出力</dt><dd>LIFE様式に整形されたCSV下書き／次回提出期限の自動逆算／評価未実施者リスト／フィードバック要点の日本語要約</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>提出頻度3か月化の負担が現場で爆発中。「次の提出までやることが1画面で見える」だけで継続算定の不安が消える。<br><b>注意：</b>個人識別情報はローカル処理＋送信前マスキング前提。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">3位</span><h4>運営指導1か月前パッケージ生成エージェント</h4><span class="strength">動機：最強 ／ QW：1週</span></div>
+      <dl><dt>入力</dt><dd>通知文（事業所種別・指導日）、過去1年の介護記録・契約書・加算届出</dd>
+      <dt>出力</dt><dd>自治体別チェックリストに沿った必要書類インデックス／欠落書類アラート／よくある指摘事項に対する自事業所の該当箇所マーキング／当日想定問答集</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>通知到着〜実施まで1か月の極短期勝負。「届いた通知をアップしたら準備TODOが全部出る」は商談に来る理由として鉄板。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">4位</span><h4>クリニック電話・予約変更AI受付（FAQ＋振分けボット）</h4><span class="strength">動機：強 ／ QW：2〜4週</span></div>
+      <dl><dt>入力</dt><dd>診療時間・休診日・初再診ルール・WEB予約URL、よくある問い合わせ</dd>
+      <dt>出力</dt><dd>24時間応答可能な予約変更/FAQチャット（LINE・Web埋込）／複雑案件のみ受付に振分け／日次の問い合わせサマリ</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>業務時間の40%が電話という数字は院長に刺さる。<br><b>注意：</b>医療相談は回答せず受付振り分けに限定する旨を明示。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">5位</span><h4>レセプト事前点検＋算定漏れ警告エージェント</h4><span class="strength">動機：中〜強 ／ QW：1か月</span></div>
+      <dl><dt>入力</dt><dd>レセコン出力CSV（または日次の診療記録）、診療科、改定日付</dd>
+      <dt>出力</dt><dd>返戻されやすい項目を請求前に自動チェック／算定漏れ候補のフラグ／改定後点数の差分アラート</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>返戻1件あたりの再処理工数と入金遅延に直撃。<br><b>注意：</b>患者ID・病名は匿名化必須、最終判断は医療事務人間が行う前提を明示。</div>
+    </div>
+
+    <h3>主要出典</h3>
+    <ul class="src-list">
+      <li><a href="https://kaibiz.jp/column/saiyo-2/">訪問介護「人手不足は15.53倍」（カイビズ）</a></li>
+      <li><a href="https://www.ndsoft.jp/info/law_kaigo2024/kaigo_joint/297530">訪問介護のヘルパー不足は「喫緊の課題」 厚労省</a></li>
+      <li><a href="https://caretasukeru.com/day-seniors/add/other-add/6848/">わかりやすいLIFE加算（けあタスケル）</a></li>
+      <li><a href="https://www.mhlw.go.jp/stf/newpage_38790.html">令和6年度介護報酬改定について（厚生労働省）</a></li>
+      <li><a href="https://www.ntm.co.jp/column/detail147">クリニックの受付電話を減らす方法5選</a></li>
+      <li><a href="https://rehab.cloud/mag/3066/">運営指導（実地指導）とは（リハブクラウド）</a></li>
+    </ul>
+    <a class="top-link" href="#top">▲ 業種ナビに戻る</a>
+  </section>
+
+  <!-- ===== 6. 運輸・物流 ===== -->
+  <section class="industry" data-c="unyu" id="unyu">
+    <span class="badge">06 / UNYU</span>
+    <h2>運輸・物流（トラック運送・引越・宅配・倉庫・3PL）</h2>
+    <div class="sub">対象：1〜30名規模 ／ 配車属人化＋2024年問題＋ドライバー不足＋荷主交渉力弱＋点呼紙運用が複合</div>
+
+    <h3>主要ペイン</h3>
+    <div class="pain"><b>1. 配車計画の属人化とベテラン依存</b>
+      <div><span class="stat">配車業務を課題とする企業 64.9%</span></div>
+      <p>車両10〜50台クラスではベテラン1名が一手に担うケースが多く、休暇取得困難・退職リスクが直撃。</p>
+    </div>
+    <div class="pain"><b>2. 2024年問題による輸送力不足と960時間規制</b>
+      <div><span class="stat">2024年度に輸送力14.2%、2030年度に34.1%不足</span></div>
+      <p>違反は「6ヶ月以下の懲役または30万円以下の罰金」。月80h／拘束274hが実質上限。</p>
+    </div>
+    <div class="pain"><b>3. ドライバー高齢化・採用難</b>
+      <div><span class="stat">有効求人倍率 2.51倍（2025/4）</span><span class="stat">65歳以上が約9.5%</span><span class="stat">若年層わずか10.1%</span><span class="stat">2028年に約27.8万人不足見込み</span></div>
+    </div>
+    <div class="pain"><b>4. 荷主交渉力の弱さ（運賃・待機・附帯業務の収受不全）</b>
+      <div><span class="stat">待機料・荷役料を収受できているのは3〜5割</span></div>
+      <p>2024年3月の標準的運賃改定で+8%＋荷役対価加算が告示されたが、中小は交渉文書化のノウハウなし。</p>
+    </div>
+    <div class="pain"><b>5. 点呼記録・運行日報の紙運用＋改正物流効率化法対応</b>
+      <p>点呼記録簿は法令で1年保存義務。2026年4月全面施行の改正物流効率化法で「荷待ち・荷役時間短縮、積載効率向上」の取組が義務化・調査公表対象に。</p>
+    </div>
+
+    <h3>特典AIエージェント題材ランキング</h3>
+    <div class="rank">
+      <div class="head"><span class="pos">1位</span><h4>荷主向け「運賃値上げ交渉レター自動生成」</h4><span class="strength">動機：最強 ／ QW：1週で1社目を送れる</span></div>
+      <dl><dt>入力</dt><dd>現行運賃表、燃料単価、走行ルート、待機実績メモ、荷主名／取引履歴</dd>
+      <dt>出力</dt><dd>標準的運賃と燃料サーチャージ基準に基づいた「値上げ依頼書」「待機料請求根拠書」「面談トークスクリプト」一式</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>待機・荷役料を取れていない事業者が5〜7割。社長の最大の頭痛である「荷主に切られずに値上げを言う」を即・代筆。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">2位</span><h4>配車ベテランの頭脳を吸い出す「ノウハウ言語化＆引継ぎ」</h4><span class="strength">動機：最強 ／ QW：2〜3週</span></div>
+      <dl><dt>入力</dt><dd>ベテラン配車係への音声インタビュー（10分×3回）、過去の配車表、車両一覧、よく使う通行不可道路メモ</dd>
+      <dt>出力</dt><dd>「配車判断ルールブック」＋ 新人向け配車チェックリスト＋ 翌日配車のたたき台</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>配車課題64.9%、属人化リスクが社長の不眠原因No.1。「ベテランが倒れたら会社が止まる」を解消。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">3位</span><h4>点呼記録＆運行日報 自動文字起こし・違反アラート</h4><span class="strength">動機：強 ／ QW：翌日</span></div>
+      <dl><dt>入力</dt><dd>点呼時のスマホ録音（アルコール検知器の数値写真）、ドライバーからのLINE報告、デジタコCSV</dd>
+      <dt>出力</dt><dd>法令フォーマット準拠の点呼記録簿（PDF）／960時間／月80時間／拘束274時間の残時間ダッシュボード／違反予兆アラート</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>紙の点呼簿を毎日転記している中小に直効き。違反は懲役・罰金リスク。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">4位</span><h4>ドライバー求人原稿＆採用LP生成</h4><span class="strength">動機：強 ／ QW：2週</span></div>
+      <dl><dt>入力</dt><dd>自社の給与レンジ、車種、走行エリア、休日数、社長の想い（音声OK）</dd>
+      <dt>出力</dt><dd>媒体別（Indeed／ドラEVER／ハローワーク）に最適化された求人原稿3パターン／応募者向けLINE自動返信スクリプト</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>「求人出しても来ない」は社長の口癖トップ。原稿の差で応募数が変わると体感しやすい。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">5位</span><h4>使える補助金・助成金 一発診断</h4><span class="strength">動機：強 ／ QW：診断は即日</span></div>
+      <dl><dt>入力</dt><dd>従業員数、車両台数、年商、地域、直近1年の設備投資予定</dd>
+      <dt>出力</dt><dd>働き方改革推進支援助成金／IT導入補助金／自治体の燃料高騰支援等から採択可能性つき3案／申請スケジュール</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>トレーラー購入が最大75%補助の事例もあり、知らずに損している社長が多数。</div>
+    </div>
+
+    <h3>主要出典</h3>
+    <ul class="src-list">
+      <li><a href="https://www.pudo.jp/ja/blog/logistics-problem">物流業界の2024年問題（Packcity Japan）</a></li>
+      <li><a href="https://jta.or.jp/logistics2024-lp/">知っていますか？物流の2024年問題（全日本トラック協会）</a></li>
+      <li><a href="https://www.aspicjapan.org/asu/article/3852">配車計画システムの導入メリット（アスピック）</a></li>
+      <li><a href="https://jta.or.jp/member/kaisei_jigyoho/top/hyoujun_unchin.html">標準的な運賃（全日本トラック協会）</a></li>
+      <li><a href="https://www.revised-logistics-act-portal.mlit.go.jp/">改正物流効率化法ポータルサイト（国交省）</a></li>
+      <li><a href="https://pmg-logistics.co.jp/column/column-4956/">深刻な運送業界の人手不足2025</a></li>
+    </ul>
+    <a class="top-link" href="#top">▲ 業種ナビに戻る</a>
+  </section>
+
+  <!-- ===== 7. IT・サービス ===== -->
+  <section class="industry" data-c="it" id="it">
+    <span class="badge">07 / IT</span>
+    <h2>IT・サービス（受託開発・Web制作・システム保守・SES・コンサル・人材紹介）</h2>
+    <div class="sub">対象：1〜30名規模 ／ 単価下落＋提案書工数＋保守ループ＋IT人材不足＋ナレッジ属人化が複合</div>
+
+    <h3>主要ペイン</h3>
+    <div class="pain"><b>1. 単価下落・内製化進行による受注減</b>
+      <div><span class="stat">ソフトウェア業者倒産 2024年度220件で過去10年最多</span><span class="stat">大企業の内製化率 59.1%</span></div>
+      <p>生成AIの普及で「工数×単価」の人月モデルが直撃。</p>
+    </div>
+    <div class="pain"><b>2. 提案書・要件定義書の作成工数が重い</b>
+      <div><span class="stat">要件定義 工期比率20%・工数比率13%</span><span class="stat">要件定義工程に1〜2ヶ月</span></div>
+      <p>営業段階の提案書作成も無償で行うのが慣例で、受注前ロスが大きい。</p>
+    </div>
+    <div class="pain"><b>3. 保守・障害一次対応で工数を奪われる</b>
+      <div><span class="stat">保守費目安は構築費の10〜15%</span></div>
+      <p>中小では「24時間365日体制を組めない」「問い合わせ対応だけで一日が終わる」状況が常態化。</p>
+    </div>
+    <div class="pain"><b>4. IT人材不足・採用難・アサイン非効率</b>
+      <div><span class="stat">2030年までIT人材最大80万人不足</span><span class="stat">IT企業の85.2%が「量」、86.2%が「質」で人材不足を実感</span></div>
+      <p>SES企業は「先に人を集めて案件を探す」逆転構造になり、待機エンジニアが発生。</p>
+    </div>
+    <div class="pain"><b>5. ナレッジが属人化し、退職・アサイン替えで吹き飛ぶ</b>
+      <div><span class="stat">中小SIerの生成AI活用推進率 30%前後</span></div>
+      <p>「ツールを入れたのに結局あの人に聞いた方が早い」が常態化。</p>
+    </div>
+
+    <h3>特典AIエージェント題材ランキング</h3>
+    <div class="rank">
+      <div class="head"><span class="pos">1位</span><h4>提案書・要件定義書ドラフト自動生成</h4><span class="strength">動機：最強 ／ QW：配布即日</span></div>
+      <dl><dt>入力</dt><dd>客先ヒアリングメモ（議事録テキスト or 音声）、参考過去案件のRFP、想定予算レンジ</dd>
+      <dt>出力</dt><dd>提案書（目的・課題・スコープ・想定機能一覧・前提条件・概算工数・リスク）＋要件定義書ドラフト</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>要件定義は工期20%、提案書は無償工数の代表格。AIで初稿が30分で出れば、受注前ロスがそのまま利益に変わる。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">2位</span><h4>見積・工数自動算出エージェント（類似案件ベース）</h4><span class="strength">動機：最強 ／ QW：即日</span></div>
+      <dl><dt>入力</dt><dd>要件メモ（自然文でOK）、技術スタック、社内の過去案件実績CSV（任意）</dd>
+      <dt>出力</dt><dd>機能別の人日見積（FP法・類似法のハイブリッド）／根拠コメント／リスク係数／価格レンジ</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>「単価×工数×人数」の精度が利益を左右するのに、根拠なき短納期見積でデスマーチを誘発。経営者が自分で叩いて精度を体感できる。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">3位</span><h4>問い合わせ・障害一次対応AI（社内SE代理）</h4><span class="strength">動機：強 ／ QW：翌日</span></div>
+      <dl><dt>入力</dt><dd>顧客からの問い合わせメール/Slack、過去のFAQ・障害対応ログ、対象システムの構成メモ</dd>
+      <dt>出力</dt><dd>一次回答ドラフト（暫定対応＋根本対応＋エスカレ要否判定）／社内チケット起票文／顧客向け返信文</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>「問い合わせだけで一日が終わる」が中小保守チームの実感。配布翌日から効果。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">4位</span><h4>週次プロジェクト進捗レポート自動生成</h4><span class="strength">動機：強 ／ QW：即日</span></div>
+      <dl><dt>入力</dt><dd>Backlog/Jira/Redmineのチケット状況、Gitコミット履歴、各メンバーの稼働メモ</dd>
+      <dt>出力</dt><dd>クライアント提出用の週次レポート（進捗率・成果・予定・課題・リスク）／社内向け要約版</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>PM/PLが金曜夜に手作業で書いている資料。報告フォーマットがそのまま再現できれば即導入。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">5位</span><h4>IT導入補助金 申請書ドラフト生成（支援事業者側向け）</h4><span class="strength">動機：強 ／ QW：30分〜1か月</span></div>
+      <dl><dt>入力</dt><dd>顧客（中小企業）の業種・売上規模・課題ヒアリングメモ、自社ITツール情報</dd>
+      <dt>出力</dt><dd>補助金申請書の事業計画パート／加点項目チェックリスト</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>採択率60〜80%だが、申請書作成の手間が支援事業者のボトルネック。補助金経由の受注パイプを増やせる。</div>
+    </div>
+
+    <h3>主要出典</h3>
+    <ul class="src-list">
+      <li><a href="https://type.jp/et/feature/28070/">SES倒産の引き金とは？（エンジニアtype）</a></li>
+      <li><a href="https://type.jp/et/feature/28078/">生成AIで「人月ビジネス」に陰り？</a></li>
+      <li><a href="https://juas.or.jp/cms/media/2025/03/25swm_pr.pdf">ソフトウェア・メトリクス調査2025（JUAS）</a></li>
+      <li><a href="https://www.meti.go.jp/shingikai/economy/daiyoji_sangyo_skill/pdf/001_s03_00.pdf">IT人材育成の状況等について（経済産業省）</a></li>
+      <li><a href="https://levtech.jp/partner/guide/article/detail/252/">SESの人手不足はなぜ起きる（レバテック）</a></li>
+      <li><a href="https://it-shien.smrj.go.jp/">デジタル化・AI導入補助金2026 公式</a></li>
+    </ul>
+    <a class="top-link" href="#top">▲ 業種ナビに戻る</a>
+  </section>
+
+  <!-- ===== 8. 宿泊・観光 ===== -->
+  <section class="industry" data-c="shukuhaku" id="shukuhaku">
+    <span class="badge">08 / SHUKUHAKU</span>
+    <h2>宿泊・観光（地方旅館・ビジネスホテル・ペンション・観光バス・お土産店）</h2>
+    <div class="sub">対象：1〜30名規模 ／ 人手不足＋OTA手数料＋インバウンド対応＋口コミ運用＋宿泊税ラッシュが複合</div>
+
+    <h3>主要ペイン</h3>
+    <div class="pain"><b>1. 慢性的な人手不足・離職率の高さ</b>
+      <div><span class="stat">宿泊＋飲食の離職率 26.6%（全産業1.7倍）</span><span class="stat">60.2%が正社員不足</span><span class="stat">62%が「求人に対する応募がない」</span></div>
+    </div>
+    <div class="pain"><b>2. OTA運用の手数料負担と多重管理の工数</b>
+      <div><span class="stat">基本手数料 楽天9.25%・じゃらん10%</span><span class="stat">実質コスト15〜22%以上</span></div>
+      <p>複数OTA管理画面の往復で入力ミス・オーバーブッキングが頻発。</p>
+    </div>
+    <div class="pain"><b>3. インバウンド対応（多言語・FAQ・決済）の遅れ</b>
+      <div><span class="stat">2025年訪日外客数 4,268万人で過去最高</span><span class="stat">インバウンド消費額9.5兆円</span></div>
+      <p>英語対応スタッフ不足で「直前の離脱」が損失を生む。</p>
+    </div>
+    <div class="pain"><b>4. 口コミ返信業務の属人化・遅延</b>
+      <div><span class="stat">AI返信導入で事務時間 週10時間以上削減</span></div>
+      <p>じゃらん／楽天／Google／一休／るるぶに分散する口コミに支配人・フロントが個別返信。</p>
+    </div>
+    <div class="pain"><b>5. 宿泊税ラッシュ＋オーバーツーリズム対応</b>
+      <div><span class="stat">宿泊税導入自治体 2025年末17 → 2026年約50</span></div>
+      <p>東京都の3%定率制移行ではPMS・自動精算機改修で数百万円単位の負担。</p>
+    </div>
+
+    <h3>特典AIエージェント題材ランキング</h3>
+    <div class="rank">
+      <div class="head"><span class="pos">1位</span><h4>マルチOTA口コミ一括返信エージェント</h4><span class="strength">動機：最強 ／ QW：1週</span></div>
+      <dl><dt>入力</dt><dd>じゃらん／楽天／Google／一休／Booking.com の口コミURL or スクショ、宿のブランドトーン</dd>
+      <dt>出力</dt><dd>各OTA形式に最適化された返信文ドラフト（日英中韓）＋ ネガティブ口コミの原因分類タグ＋経営者向け週次サマリ</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>支配人の週10時間以上の事務が即削減、Google評価・OTA順位に直結。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">2位</span><h4>OTA在庫・料金ミス検知＆夜間アラート</h4><span class="strength">動機：最強 ／ QW：即日</span></div>
+      <dl><dt>入力</dt><dd>サイトコントローラー or OTA管理画面の在庫・料金CSV、自社の最低料金ルール</dd>
+      <dt>出力</dt><dd>「楽天だけ料金が他OTAより20%安い」「Booking.comの在庫が0なのに自社サイトは空き」など整合性レポート＋Chatwork/LINE通知</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>実質コスト15〜22%のOTAで売り損ね・売り過ぎ事故を防ぐ。経営者が一番怖い「気付かないうちの逸失利益」を可視化。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">3位</span><h4>訪日外国人FAQ多言語チャット（事前メール＋館内QR）</h4><span class="strength">動機：強 ／ QW：2週</span></div>
+      <dl><dt>入力</dt><dd>自施設の館内ルール・周辺観光情報・チェックイン手順・アクセス情報</dd>
+      <dt>出力</dt><dd>英中韓で答えるWebチャット＋予約確定後の多言語フォローメール自動送信＋館内設置QRコード版</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>訪日4,268万人時代に英語対応スタッフを雇わずに対応可能。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">4位</span><h4>清掃シフト＆客室稼働最適化</h4><span class="strength">動機：強 ／ QW：2〜3週</span></div>
+      <dl><dt>入力</dt><dd>PMS or 予約一覧、清掃スタッフの稼働可能時間</dd>
+      <dt>出力</dt><dd>当日清掃ルート＋人員配置表＋優先順位（早アーリーチェックイン対応）</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>チェックイン遅延が週3〜4件→週0〜1件に減ったベンチマーク。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">5位</span><h4>観光・省力化補助金マッチング</h4><span class="strength">動機：強 ／ QW：3〜4週</span></div>
+      <dl><dt>入力</dt><dd>施設規模、所在自治体、検討中の投資</dd>
+      <dt>出力</dt><dd>観光庁省力化投資補助金（最大1,000万円）／インバウンド受入環境整備事業／自治体個別補助のマッチング表＋申請スケジュール</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>「うちのAI導入、補助金で半額になります」がフォーム返信の決定打。</div>
+    </div>
+
+    <h3>主要出典</h3>
+    <ul class="src-list">
+      <li><a href="https://www.mlit.go.jp/kankocho/content/001891438.pdf">国土交通省 宿泊業の人材確保・育成の状況に関する実態調査（令和6年度）</a></li>
+      <li><a href="https://relohotel-solutions.com/column/commission/">リロホテル OTA手数料比較2026年版</a></li>
+      <li><a href="https://www.kankokeizai.com/【特集】宿泊施設の口コミ一元管理、aiで返信/">観光経済新聞 宿泊施設の口コミ一元管理・AI返信</a></li>
+      <li><a href="https://www.nikkei.com/article/DGXZQOUA058WI0V00C26A1000000/">日経 宿泊税ラッシュ26年30自治体導入</a></li>
+      <li><a href="https://kanko-jinzai.go.jp/">観光庁 省力化投資補助事業 特設サイト</a></li>
+    </ul>
+    <a class="top-link" href="#top">▲ 業種ナビに戻る</a>
+  </section>
+
+  <!-- ===== 9. 教育・学習塾 ===== -->
+  <section class="industry" data-c="kyouiku" id="kyouiku">
+    <span class="badge">09 / KYOUIKU</span>
+    <h2>教育・学習塾（地域学習塾・予備校・英会話・プログラミング・個別指導）</h2>
+    <div class="sub">対象：1〜30名規模 ／ 退塾防止＋採用難＋採点・報告書負担＋集客二極化＋通信制競合が複合</div>
+
+    <h3>主要ペイン</h3>
+    <div class="pain"><b>1. 退塾の最大要因は「保護者への報告不足」</b>
+      <div><span class="stat">退塾経験保護者の4割以上が報告頻度に不満</span><span class="stat">月1回以上の保護者面談がある塾はわずか13.5%</span></div>
+      <p>塾→保護者の連絡手段は56.5%が「子供が持ち帰るプリント」、LINEは5%以下。</p>
+    </div>
+    <div class="pain"><b>2. 講師採用難・離職・人件費高騰の三重苦</b>
+      <div><span class="stat">約47%の塾が講師採用難航</span><span class="stat">採用コスト5年で2〜3倍</span><span class="stat">2024年学習塾倒産53件で過去最多</span></div>
+      <p>中小塾ほど大学生アルバイトに依存し、保護者対応・残業の負担で離職率が高い。</p>
+    </div>
+    <div class="pain"><b>3. テスト採点・指導報告書作成が現場時間を圧迫</b>
+      <div><span class="stat">AI採点導入で採点業務時間を80〜90%削減</span></div>
+    </div>
+    <div class="pain"><b>4. 集客の二極化：MEO×口コミ×LINE統合が必須</b>
+      <div><span class="stat">学習塾市場 5,431億円（前年比+1.0%）</span><span class="stat">約3社に1社が赤字</span></div>
+      <p>「広告だけで集める」のは不可能になり、MEO×口コミ×LINE×チラシの統合運用が要件化。</p>
+    </div>
+    <div class="pain"><b>5. 通信制高校・オンライン塾の急拡大による顧客流出圧力</b>
+      <div><span class="stat">通信制高校生徒数 2015年18万→2024年29万人（+60.8%）</span><span class="stat">高校生の11人に1人</span></div>
+    </div>
+
+    <h3>特典AIエージェント題材ランキング</h3>
+    <div class="rank">
+      <div class="head"><span class="pos">1位</span><h4>保護者向け「指導報告書・面談メモ自動生成」</h4><span class="strength">動機：最強 ／ QW：1〜2週</span></div>
+      <dl><dt>入力</dt><dd>講師が授業後に話した30秒の音声メモ（または箇条書き3行）＋生徒名</dd>
+      <dt>出力</dt><dd>保護者宛の指導報告書（今日の単元／理解度／宿題／次回まで／一言コメント）をLINE送信形式で即生成</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>退塾理由No.1の「報告頻度不足」を直撃。月1面談すら13.5%しかない現状で、毎回授業後に自動で報告が出れば退塾率が即下がる＝月謝(2〜3万円)×退塾減で投資回収が見える。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">2位</span><h4>体験申込→入塾の「自動フォロー＆面談台本生成」</h4><span class="strength">動機：最強 ／ QW：2〜4週</span></div>
+      <dl><dt>入力</dt><dd>体験申込フォーム情報＋体験授業後の所感3行</dd>
+      <dt>出力</dt><dd>体験翌日の保護者向けLINEフォロー文／入塾面談の台本／未入塾時の3日後/7日後の追客文</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>体験→入塾の歩留まりが収益の急所。中小塾は「面談がベテランしかできない」属人化の壁を抱える。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">3位</span><h4>退塾予兆検知＆引き留め提案エージェント</h4><span class="strength">動機：強 ／ QW：3〜4週</span></div>
+      <dl><dt>入力</dt><dd>直近3ヶ月の出席・宿題提出・小テスト点・保護者連絡頻度</dd>
+      <dt>出力</dt><dd>退塾リスクスコア＋リスク高生徒への「個別声かけ台本」「保護者面談提案文」「追加提案コース」</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>入塾後1年以内退塾者の不満率は39%（1年以上は14%）と差が明確＝早期予兆検知が効く。1人退塾防止=年間24〜36万円の売上保全。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">4位</span><h4>MEO口コミ返信＆チラシ→LINE誘導文 自動生成</h4><span class="strength">動機：強 ／ QW：1〜2週</span></div>
+      <dl><dt>入力</dt><dd>Google口コミ本文 or 配布予定エリア・学年・キャンペーン内容</dd>
+      <dt>出力</dt><dd>口コミへの個別返信文／チラシのキャッチコピー3案＋LINE登録誘導QR導線文／Instagramキャプション3案</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>MEO×口コミ×LINEの統合が2026年の集客要件化。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">5位</span><h4>講師シフト調整＆採用応募返信エージェント</h4><span class="strength">動機：中 ／ QW：2〜4週</span></div>
+      <dl><dt>入力</dt><dd>講師の指導可能教科/曜日/時間と生徒の希望コマ／応募者の履歴書情報</dd>
+      <dt>出力</dt><dd>1週間のシフト案＋空きコマ警告／応募者ごとの面接日程提案メール＋採用後の研修スケジュール</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>採用コストが5年で2〜3倍に膨らむ中、応募対応速度=採用率という構造に直接効く。</div>
+    </div>
+
+    <h3>主要出典</h3>
+    <ul class="src-list">
+      <li><a href="https://ict-enews.net/2019/11/19poper/">塾の満足度調査、退塾理由は「成績向上」より「報告頻度」（ICT教育ニュース）</a></li>
+      <li><a href="https://prtimes.jp/main/html/rd/p/000000028.000144551.html">学習塾の採用状況アンケート調査（塾エイド）</a></li>
+      <li><a href="https://reseed.resemom.jp/article/2025/10/15/11901.html">中小規模の学習塾で倒産急増（ReseEd 2025/10）</a></li>
+      <li><a href="https://wakudori.co.jp/market-trend/cram-school-market/">学習塾の集客ができない？2026年の優先順位（ワクドリ）</a></li>
+      <li><a href="https://souken.shingakunet.com/research/2025/04/182024.html">高校の通信制課程 現状と進路変化（リクルート進学総研）</a></li>
+    </ul>
+    <a class="top-link" href="#top">▲ 業種ナビに戻る</a>
+  </section>
+
+  <!-- ===== 10. 美容・理美容 ===== -->
+  <section class="industry" data-c="biyou" id="biyou">
+    <span class="badge">10 / BIYOU</span>
+    <h2>美容・理美容（サロン・エステ・ネイル・整体／多店舗・FC・地域チェーン）</h2>
+    <div class="sub">対象：1〜30名規模 ／ 倒産過去最多＋採用難＋リピート率低＋口コミ運用＋店販不振が複合</div>
+
+    <h3>主要ペイン</h3>
+    <div class="pain"><b>1. 倒産・短命化（最重要マクロ環境）</b>
+      <div><span class="stat">2025年美容室倒産 235件で過去最多</span><span class="stat">9割が資本金1000万円未満</span><span class="stat">設立10年未満が49%</span></div>
+      <p>2年連続で記録更新。「人材不足・コスト高・値上げ難」の三重苦が直撃。</p>
+    </div>
+    <div class="pain"><b>2. 採用難・離職率の高止まり</b>
+      <div><span class="stat">応募がない・少ない美容室75%</span><span class="stat">1年目離職率約50%</span></div>
+      <p>地方は大都市サロンに学生を奪われ採用候補が枯渇。</p>
+    </div>
+    <div class="pain"><b>3. リピート率の低さ（新規の7割が再来店しない）</b>
+      <div><span class="stat">美容室の3ヶ月リピート率は全体で約30%</span></div>
+      <p>リピート率28→50%改善で年商数百万円規模で変動。LTV直結KPI。</p>
+    </div>
+    <div class="pain"><b>4. 口コミ返信・SNS投稿の運用工数</b>
+      <p>ホットペッパービューティーは「返信内容」で選ばれる時代だが、現場は「忙しくて返信時間がない」。Instagramは毎日〜3日に1回の投稿頻度が成功条件。</p>
+    </div>
+    <div class="pain"><b>5. 物販（店販）比率が上がらない</b>
+      <div><span class="stat">店販比率 平均5%、理想は20%</span><span class="stat">店販で女性+30%・男性+40%客単価UP</span></div>
+      <p>「売り方を教える人がいない」中小サロンが大半。</p>
+    </div>
+
+    <h3>特典AIエージェント題材ランキング</h3>
+    <div class="rank">
+      <div class="head"><span class="pos">1位</span><h4>口コミ返信ドラフト自動生成エージェント</h4><span class="strength">動機：最強 ／ QW：1週以内</span></div>
+      <dl><dt>入力</dt><dd>ホットペッパービューティー／Googleの口コミ本文 ＋ 担当スタイリスト名 ＋ サロンのトーン設定</dd>
+      <dt>出力</dt><dd>顧客名と具体エピソードを織り込んだ返信文ドラフト3パターン（即コピペ可、絵文字あり/なし切替）</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>「定型コピペ返信は逆効果と分かっているが時間がない」現場の最頻ペインを直撃。閉店後の30分作業がほぼゼロに。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">2位</span><h4>Instagram投稿・キャプション・ハッシュタグ自動生成</h4><span class="strength">動機：最強 ／ QW：2週</span></div>
+      <dl><dt>入力</dt><dd>スタイル写真1枚 ＋ 施術メニュー（カラー名・カット技法）＋ 客層</dd>
+      <dt>出力</dt><dd>キャプション本文＋集客に効くハッシュタグ20〜30個＋リール用テロップ案</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>「毎日投稿が成功条件だが続かない」を解決。営業終了後の30分が3分に。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">3位</span><h4>カウンセリング記録→次回提案・追客LINE</h4><span class="strength">動機：強 ／ QW：3〜4週</span></div>
+      <dl><dt>入力</dt><dd>カウンセリング音声/メモ ＋ 来店履歴 ＋ 前回施術メニュー</dd>
+      <dt>出力</dt><dd>電子カルテ用の構造化サマリ＋次回提案メニュー＋来店周期に合わせた追客LINE文面</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>リピート率30%→50%という売上直結KPIに効く。本部・新人スタイリストにも展開可能。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">4位</span><h4>店販レコメンド・トークスクリプト生成</h4><span class="strength">動機：強 ／ QW：4週</span></div>
+      <dl><dt>入力</dt><dd>顧客カルテ（髪質・悩み）＋ 当日の施術内容</dd>
+      <dt>出力</dt><dd>提案すべき商品TOP3＋押し売り感のないトークスクリプト＋ホームケアLINEテンプレ</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>店販5%→10%でも年間数百万円の粗利改善。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">5位</span><h4>多店舗売上・指名・離職リスク 週次ダッシュボード</h4><span class="strength">動機：強 ／ QW：2〜3週</span></div>
+      <dl><dt>入力</dt><dd>POS CSV（売上・指名・物販）＋ シフトデータ ＋ スタイリスト勤続月数</dd>
+      <dt>出力</dt><dd>店舗別/スタイリスト別の指名集中度・離職リスクスコア・売上要因分解レポート</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>FC本部・多店舗経営者の「データはあるが見ていない」課題。労務倒産を未然に防ぐシグナル化。</div>
+    </div>
+
+    <h3>主要出典</h3>
+    <ul class="src-list">
+      <li><a href="https://www.itmedia.co.jp/business/articles/2601/07/news031.html">2025年「美容室」倒産件数が過去最多に（ITmedia）</a></li>
+      <li><a href="https://www.tdb.co.jp/report/industry/20260106-beauty25y/">「美容室」の倒産動向2025（帝国データバンク）</a></li>
+      <li><a href="https://biz.relax-job.com/salon-staff-shortage">美容室の人手不足の現実とは？（Bizリジョブ）</a></li>
+      <li><a href="https://local-mp.co.jp/media/columns/btoc-salon-repeat-strategy/">美容室のリピート率改善（LMP）</a></li>
+      <li><a href="https://rsvia.co.jp/column/hot_pepper_beauty_reviews_reply/">ホットペッパービューティーの口コミ返信例文（リザービア）</a></li>
+      <li><a href="https://www.beautopia.jp/12439/">美容室店販の実態と課題（ビュートピア）</a></li>
+    </ul>
+    <a class="top-link" href="#top">▲ 業種ナビに戻る</a>
+  </section>
+
+  <!-- ===== 11. 広告・PR・印刷 ===== -->
+  <section class="industry" data-c="koukoku" id="koukoku">
+    <span class="badge">11 / KOUKOKU</span>
+    <h2>広告・PR・印刷（地域広告代理店・印刷会社・販促・デザイン・映像制作）</h2>
+    <div class="sub">対象：1〜30名規模 ／ 市場縮小＋営業非効率＋デジタルシフト＋並走案件＋校正リスクが複合</div>
+
+    <h3>主要ペイン</h3>
+    <div class="pain"><b>1. 売上ピーク比3割減・廃業過去最多</b>
+      <div><span class="stat">2025年度印刷業 休廃業・解散 230件で過去最多</span><span class="stat">売上はピーク比3割減</span></div>
+    </div>
+    <div class="pain"><b>2. 営業・マーケティング非効率が最大課題</b>
+      <div><span class="stat">「営業・マーケ非効率」62.8%で最大課題</span><span class="stat">AI導入希望業務「営業・マーケ」68.8%</span></div>
+      <p>失注を恐れコスト上昇分を価格転嫁できず、利益の出ない受注が常態化。</p>
+    </div>
+    <div class="pain"><b>3. 紙需要のSNS・デジタルシフトによる構造変化</b>
+      <p>インボイス制度で紙伝票・帳簿印刷需要減、アプリ・SNS台頭でチラシ・DM需要も縮小。</p>
+    </div>
+    <div class="pain"><b>4. 並走案件のスケジュール属人化・炎上リスク</b>
+      <p>1ディレクターが5〜10案件を同時並走するのが常態。「複数プロジェクト同時進行で全体像が見えず、スケジュール管理を怠れば抱える全案件に被害」属人化問題が代理店共通課題。</p>
+    </div>
+    <div class="pain"><b>5. 校正・入稿ミスが致命傷になる構造</b>
+      <p>1文字ミスが刷り直し＝赤字直結。デザイン校正／入稿データ／本機校正／後加工の4工程の校正が必要。人手不足で回らない。</p>
+    </div>
+
+    <h3>特典AIエージェント題材ランキング</h3>
+    <div class="rank">
+      <div class="head"><span class="pos">1位</span><h4>コンペ提案書ドラフト生成エージェント</h4><span class="strength">動機：最強 ／ QW：即日</span></div>
+      <dl><dt>入力</dt><dd>クライアント名／RFP or 業種・予算・課題のヒアリングメモ／自社の過去事例3〜5件</dd>
+      <dt>出力</dt><dd>表紙＋課題整理＋戦略骨子＋クリエイティブ方向性＋スケジュール＋見積レンジ＋自社実績差し込みのPowerPoint構成案（20〜30枚）、コピー案3パターン</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>コンペ提案書は1案件あたり3〜5営業日かかる最大の社内コスト。代理店・制作会社の社長が一番削りたい時間。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">2位</span><h4>入稿前データ・原稿一括校正エージェント</h4><span class="strength">動機：最強 ／ QW：次回入稿で即適用</span></div>
+      <dl><dt>入力</dt><dd>InDesign/Illustrator書き出しPDF＋クライアントから受領した原稿テキスト＋校正ルール</dd>
+      <dt>出力</dt><dd>13項目チェックリストに沿った差分レポート（人名・電話番号・URL・価格・日付・薬機法等NGワード／塗り足し・フォントアウトライン化の警告／原稿との不一致）</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>1文字ミスで刷り直し＝数十万円の損失と信用失墜に直結。「次の入稿で実際に止めた」体験を1週間以内に作れる。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">3位</span><h4>キャッチコピー＋バナー文言量産（媒体別・A/Bテスト前提）</h4><span class="strength">動機：強 ／ QW：その場で実演可</span></div>
+      <dl><dt>入力</dt><dd>商品・サービス概要／ターゲット属性／媒体（チラシ／Meta広告／LP／DM）／訴求軸</dd>
+      <dt>出力</dt><dd>媒体ごとのコピー30案＋見出し・本文・CTA分解版＋トーン別（理性/情緒/権威）バリエーション</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>「3日かかっていたバナー制作が数分」事例が業界共通言語化。提案バリエーション増＝受注率向上。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">4位</span><h4>小規模事業者持続化補助金 申請書ドラフト</h4><span class="strength">動機：最強 ／ QW：1〜2件で体感</span></div>
+      <dl><dt>入力</dt><dd>クライアント企業の概要・売上・課題ヒアリング／販路開拓したい施策（HP制作・チラシ・看板等）／補助対象経費の内訳</dd>
+      <dt>出力</dt><dd>第20回公募要領に沿った経営計画書＋補助事業計画書のドラフト／ウェブサイト関連費1/4上限などの形式チェック済</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>採択率60〜70%の高採択補助金。「補助金活用提案でHP・チラシ・看板の受注を作る」武器に。商談時「これ持って客先行けば仕事増える」が即伝わる。</div>
+    </div>
+    <div class="rank">
+      <div class="head"><span class="pos">5位</span><h4>並走案件 進行ダッシュボード生成（週次サマリ自動化）</h4><span class="strength">動機：強 ／ QW：2〜3週</span></div>
+      <dl><dt>入力</dt><dd>各案件のタスクメモ／メール・Chatworkログ／納期一覧</dd>
+      <dt>出力</dt><dd>全案件の進捗ステータス・遅延アラート・今週のクリティカルパス・社内アサイン負荷ヒートマップを週次でレポート化</dd></dl>
+      <div class="why"><b>なぜ刺さるか：</b>ディレクター1人が5〜10案件並走で「全体像が見えない」が業界共通の慢性痛。社長が最も恐れる炎上の予兆検知。</div>
+    </div>
+
+    <h3>主要出典</h3>
+    <ul class="src-list">
+      <li><a href="https://media-innovation.jp/article/2026/05/07/143319.html">印刷業の廃業が過去最多の230件、売上高はピーク比3割減（Media Innovation）</a></li>
+      <li><a href="https://ai-media.co.jp/2026/03/27/8-printing-advertising-ai-guide/">印刷・広告業界のAI活用完全ガイド（ai-media）</a></li>
+      <li><a href="https://web.all-in.xyz/upgrade/adagency-project-system/">広告代理店がやるべきこととは？プロジェクト管理</a></li>
+      <li><a href="https://kimoto-sbd.co.jp/tsutatsukulab/2017/09/21761/">印刷物の「校正」3つのポイント（伝つくラボ）</a></li>
+      <li><a href="https://blog.ez-one.tokyo/business/small-biz-subsidy/">2026年4月版 広告宣伝費に使える「小規模事業者持続化補助金」（EzONE）</a></li>
+    </ul>
+    <a class="top-link" href="#top">▲ 業種ナビに戻る</a>
+  </section>
+
+  <footer>
+    業種別ペイン＆特典AIエージェント題材リサーチ ／ GIFT営業企画 ／ 11業種 ／ 社外秘<br>
+    Deep Research + 手動WebSearchの併用。各業種の主要出典は各セクション末尾参照。
+  </footer>
 
 </div>
 </body>
